@@ -53,7 +53,7 @@ Route::prefix('superuser')->name('superuser.')->group(function(){
         });
 
         Route::controller(BannerController::class)->group(function(){
-            Route::get('/super-banners', 'ListBanners')->name('super.list.banners');
+            Route::get('/super-banners-list', 'ListBanners')->name('super.list.banners');
             Route::get('/super-banner-edit', 'EditBanner')->name('super.edit.banner');
             Route::post('/super-banner-update', 'updateBanner')->name('super.update.banner');
             Route::post('/super-banner-active', 'activeBanner')->name('super.active.banner');

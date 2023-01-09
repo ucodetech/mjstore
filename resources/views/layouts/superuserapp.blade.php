@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('assets_back/dist/css/adminlte.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('assets_backplugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets_back/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
 
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.css')}}">
   {{-- <link rel="stylesheet" href="{{ asset('admin-assets_back/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}" --}}
@@ -258,29 +258,31 @@
 <script src="{{ asset('assets_back/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('assets_back/dist/js/adminlte.js')}}"></script>
-<script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- PAGE PLUGINS -->
 <!-- jQuery Mapael -->
 <script src="{{ asset('assets_back/plugins/jquery-mousewheel/jquery.mousewheel.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/raphael/raphael.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 
 
-<script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/jszip/jszip.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/pdfmake/pdfmake.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/pdfmake/vfs_fonts.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/toastr/toastr.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/pdfmake/vfs_fonts.js')}}"></script>
+
+<script src="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/summernote/summernote-bs4.min.js')}}"></script>
 
 <!-- ChartJS -->
 <script src="{{ asset('assets_back/plugins/chart.js/Chart.min.js')}}"></script>

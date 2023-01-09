@@ -352,6 +352,8 @@
 <script src="{{ asset('assets_back/plugins/raphael/raphael.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+
 
 <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>

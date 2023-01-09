@@ -12,7 +12,7 @@ use App\Models\Banner;
 class BannerController extends Controller
 {
     public function ListBanners(){
-        $banners = Banner::all()->orderBy('id', 'desc');
+        $banners = Banner::orderBy('id', 'desc')->get();
         return Datatables::of($banners)
                         ->addIndexColumn()
                         ->addColumn('actions', function($row){

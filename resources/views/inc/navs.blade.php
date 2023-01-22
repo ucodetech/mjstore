@@ -3,7 +3,7 @@
       <!-- Add icons to the links using the .nav-icon class
            with font-awesome or any other icon font library -->
       <li class="nav-item menu-open">
-        <a href="#" class="nav-link">
+        <a href="{{ route('superuser.super.dashboard') }}" class="nav-link">
           <i class="nav-icon fas fa-tachometer-alt"></i>
           <p>
             Dashboard
@@ -74,17 +74,41 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/examples/contact-us.html" class="nav-link">
+            <a href="{{ route('superuser.super.product.category.page') }}" class="nav-link">
               <i class="fa fa-layer-group nav-icon"></i>
               <p>Category(Product)</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/examples/contact-us.html" class="nav-link">
+            <a href="{{ route('superuser.super.brands.page') }}" class="nav-link">
               <i class="fa fa-briefcase nav-icon"></i>
-              <p>Products</p>
+              <p>Brands</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-store"></i>
+              <p>
+                Product Management
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('superuser.super.products.page') }}" class="nav-link">
+                  <i class="fa fa-briefcase nav-icon"></i>
+                  <p>Products</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('superuser.super.add.product.page') }}" class="nav-link">
+                  <i class="fa fa-plus nav-icon"></i>
+                  <p>Add Product</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
           <li class="nav-item">
             <a href="pages/examples/contact-us.html" class="nav-link">
               <i class="fa fa-layer-group nav-icon"></i>

@@ -8,7 +8,7 @@
     @php
         $title = basename($_SERVER['PHP_SELF'], '.blade.php');
         $title = explode('-', $title);
-        $title = ucfirst($title[1]);
+        $title = ucfirst($title[0]);
     @endphp
   <title> {{ config('app.name') }} | {{ $title }}</title>
 
@@ -32,10 +32,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Oswald:wght@300;400&family=Passion+One&display=swap" rel="stylesheet">
-  {{-- <link rel="stylesheet" href="{{ asset('assets_back/plugins/switch-button/css/bootstrap-switch-button.min.css') }}"> --}}
-
-  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
-
 </head>
 <style>
   *{
@@ -280,11 +276,6 @@
 <script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-
-{{-- <script src="{{ asset('assets_back/plugins/switch-button/js/bootstrap-switch-button.min.js') }}"></script> --}}
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
-
-
 <script src="{{ asset('assets_back/plugins/jszip/jszip.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/pdfmake/pdfmake.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/pdfmake/vfs_fonts.js')}}"></script>
@@ -296,12 +287,6 @@
 <!-- ChartJS -->
 <script src="{{ asset('assets_back/plugins/chart.js/Chart.min.js')}}"></script>
 {{-- my js --}}
-<script src="{{ asset('shopjs/banner.js')}}"></script>
-<script src="{{ asset('shopjs/productcategory.js') }}"></script>
-<script src="{{ asset('shopjs/brand.js') }}"></script>
-<script src="{{ asset('shopjs/product.js') }}"></script>
-
-
 
 <script>
     //  var Toast = Swal.mixin({
@@ -319,10 +304,25 @@
     }
   })
   $(function(){
-    $('#summernote').summernote()
+    $('#edit_banner_description').summernote()
+
+function readURL(input){
+    if(input.files && input.files[0]){
+        let reader = new FileReader();
+        reader.onload = function(e){
+            $('#editbannerPreview').html('<label for="banner_file"><img src="'+e.target.result+'" alt="banner" class="img-fluid"></label>');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+  $('#edit_banner_file').on('change', function(){
+        readURL(this);
+    })
+ 
   
   })
   </script>
-
+@yield('scripts')
 </body>
 </html>

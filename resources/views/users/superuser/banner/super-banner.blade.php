@@ -52,10 +52,10 @@
                              @csrf
                              @method('POST')
                               <div class="form-group text-center">
-                                <input type="file" name="banner_file" id="banner_file" style="display:none">
-                                <label for="banner_file" class="btn btn-outline-info">Select Image</label>
-                                <hr>
-                                <span class="text-danger text-error banner_file_error"></span>
+                                <input type="file" name="banner_file" id="banner_file">
+                                {{-- <label for="banner_file" class="btn btn-outline-info">Select Image</label> --}}
+                                {{-- <hr> --}}
+                                {{-- <span class="text-danger text-error banner_file_error"></span> --}}
                               </div> 
                               <div class="form-group">
                                   <label for="banner-title">Title</label>
@@ -72,6 +72,21 @@
                                       </span>
                                     </div>
                                     <span class="text-danger text-error banner_slug_url_error"></span>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="price_description">Price Description</label>
+                                    <input type="text" name="price_description" id="price_description" class="form-control" 
+                                    aria-describedby="helpId">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="link">Link</label>
+                                    <input type="text" name="link" id="link" class="form-control" 
+                                    aria-describedby="helpId">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="link_descriptions">Link Description</label>
+                                    <input type="text" name="link_descriptions" id="link_descriptions" class="form-control" 
+                                    aria-describedby="helpId">
                                   </div>
                                   <div class="form-group">
                                     <label for="banner_description">Description</label>
@@ -111,7 +126,29 @@
   <!-- /.content-wrapper -->
 @endsection
 
+@section('scripts')
 
+<script>
+  // Create the FilePond instance
+  const pond = FilePond.create(inputElement, {
+                maxFileSize: '100KB',
+                acceptedFileTypes: ['image/png', 'image/jpeg', 'image/gif'],
+                
+
+            });
+
+        FilePond.setOptions({
+        server:{
+            process: 'tmp-upload-banner',
+            revert: 'tmp-revert-banner',
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            }
+        });
+</script>
+
+@endsection
 
    
 

@@ -19,9 +19,14 @@
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Theme style -->
+  {{-- <link rel="stylesheet" href="{{ asset('assets_back/plugins/dropzone/min/dropzone.min.css')}}"> --}}
+  {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css"> --}}
+
+
   <link rel="stylesheet" href="{{ asset('assets_back/dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
-
+  {{-- <link rel="stylesheet" href="{{ asset('assets_back/plugins/select2-bootstrap4-theme/select2-bootstrap4.css') }}"> --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.css')}}">
   {{-- <link rel="stylesheet" href="{{ asset('admin-assets_back/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}" --}}
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
@@ -36,6 +41,11 @@
 
   <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
 
+  <link href="{{ asset('file_pond/dist/filepond.css')}}" rel="stylesheet" />
+  <!-- add to document <head> -->
+<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+    rel="stylesheet"/>
+
 </head>
 <style>
   *{
@@ -48,7 +58,7 @@
     font-family: 'Oswald', sans-serif; 
     font-family: 'Passion One', cursive;
   } */
-</style>
+</style>href
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
 
@@ -271,7 +281,7 @@
 <script src="{{ asset('assets_back/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 
-
+<script src="{{ asset('assets_back/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
@@ -280,10 +290,9 @@
 <script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{-- <script src="{{ asset('assets_back/plugins/switch-button/js/bootstrap-switch-button.min.js') }}"></script> --}}
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
-
 
 <script src="{{ asset('assets_back/plugins/jszip/jszip.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/pdfmake/pdfmake.min.js')}}"></script>
@@ -292,18 +301,43 @@
 <script src="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/summernote/summernote-bs4.min.js')}}"></script>
-
+{{-- <script src="{{ asset('assets_back/plugins/dropzone/min/dropzone.min.js')}}"></script> --}}
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.js"></script> --}}
+{{-- <script src="{{ asset('assets_back/plugins/select2/js/select2.full.js') }}"></script> --}}
 <!-- ChartJS -->
 <script src="{{ asset('assets_back/plugins/chart.js/Chart.min.js')}}"></script>
+{{-- filepond --}}
+{{-- <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script> --}}
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+
+{{-- <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script> --}}
+
+<script src="{{ asset('file_pond/dist/filepond.min.js')}}"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
 {{-- my js --}}
 <script src="{{ asset('shopjs/banner.js')}}"></script>
 <script src="{{ asset('shopjs/productcategory.js') }}"></script>
 <script src="{{ asset('shopjs/brand.js') }}"></script>
 <script src="{{ asset('shopjs/product.js') }}"></script>
+<script src="{{ asset('shopjs/user.js') }}"></script>
+<script src="{{ asset('shopjs/superuser.js') }}"></script>
+<script src="{{ asset('shopjs/coupon.js') }}"></script>
+
+
 
 
 
 <script>
+          // Register the plugin
+     
+   
+
     //  var Toast = Swal.mixin({
     //     toast: true,
     //     position: 'top-end',
@@ -318,11 +352,26 @@
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   })
+  FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType, FilePondPluginFileValidateSize, FilePondPluginImageResize, FilePondPluginImageCrop);
+       
+       // Get a reference to the file input element
+          const inputElement = document.querySelector('input[type="file"]');
+          // Create a FilePond instance
+         
+    
   $(function(){
     $('#summernote').summernote()
-  
-  })
-  </script>
 
+        // // Get a reference to the file input element
+        // const inputElement = document.querySelector('input[type="file"]');
+
+        // // Create a FilePond instance
+        // const pond = FilePond.create(inputElement);
+
+          
+  })
+      
+  </script>
+@yield('scripts')
 </body>
 </html>

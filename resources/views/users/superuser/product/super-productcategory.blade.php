@@ -11,10 +11,10 @@
       <div class="container-fluid">
           <!-- Info boxes -->
            
-                <div class="card m-md-auto w-50">
+                {{-- <div class="card m-md-auto w-50">
                   <div class="card-header">Preveiw Product Category Image</div>
                   <div class="card-body" id="showProductCategoryPreview"></div>
-                </div>
+                </div> --}}
                   <div class="card m-md-auto w-50">
                       <div class="card-header">
                           Add Product Category
@@ -25,10 +25,10 @@
                            @csrf
                            @method('POST')
                             <div class="form-group text-center">
-                              <input type="file" name="product_category_file" id="product_category_file" style="display:none">
-                              <label for="product_category_file" class="btn btn-outline-info">Select Image</label>
+                              <input type="file" name="product_category_file" id="product_category_file">
+                              {{-- <label for="product_category_file" class="btn btn-outline-info">Select Image</label> --}}
                               <hr>
-                              <span class="text-danger text-error product_category_file_error"></span>
+                              {{-- <span class="text-danger text-error product_category_file_error"></span> --}}
                             </div> 
                             <div class="form-group">
                                 <label for="product_category_title">Title</label>
@@ -74,7 +74,7 @@
                                   <select class="custom-select" name="parent_id" id="parent_id">
                                       <option value="">Select Parent Category</option>
                                       @foreach ($product_category as $p_cate)
-                                          <option value="{{ $p_cate->id }}">{{ $p_cate->title }} - {{ $p_cate->id }}</option>
+                                          <option value="{{ $p_cate->id }}">{{ $p_cate->title }} - {{ $p_cate->id }} {{ $p_cate->is_parent == 1 ? ' --Parent--':'' }}</option>
                                       @endforeach
                                   </select>
                                   <span class="text-danger text-error parent_id_error"></span>
@@ -103,6 +103,7 @@
                                         <th>Is Parent</th>
                                         <th>Parent</th>
                                         <th>Status</th>
+                                        <th>Is Top</th>
                                         <th>Action</th>
                                         
                                     </tr>
@@ -122,8 +123,26 @@
   <!-- /.content-wrapper -->
 @endsection
 
+@section('scripts')
 
+<script>
+  const pond = FilePond.create(inputElement, {
+              maxFileSize: '100KB',
+              acceptedFileTypes: ['image/png', 'image/jpeg']
+  });
 
+  FilePond.setOptions({
+        server:{
+          process:'tmp-upload-category',
+          revert: 'tmp-revert-category',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+          }
+        }
+  });
+</script>
+
+@endsection
    
 
    

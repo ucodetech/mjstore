@@ -14,6 +14,9 @@ class Banner extends Model
                             'description',
                             'photo',
                             'status',
-                            'condition'
+                            'condition',
+                            'price_description',
+                            'link',
+                            'link_descriptions'
                         ];
 }

@@ -1,5 +1,5 @@
 
-function readURL(input){
+function readURLCat(input){
     if(input.files && input.files[0]){
         let reader = new FileReader();
         reader.onload = function(e){
@@ -24,6 +24,7 @@ $(function(){
             {data:'isParent', name:'isParent'},
             {data:'parent_category', name:'parent_category'},
             {data:'status', name:'stauts'},
+            {data:'is_top', name:'is_top'},
             {data:'actions', name:'actions'}
         ]
 
@@ -77,7 +78,7 @@ $(function(){
     })
 
     $('#product_category_file').on('change', function(){
-        readURL(this);
+        readURLCat(this);
     })
 
     $('#generateProductCategorySlugurl').on('click', function(e){
@@ -200,6 +201,69 @@ $(function(){
 
     })
   
+
+
+  // make category a regular category
+  $('body').on('click','#regularPCategory' ,function(e){
+    e.preventDefault();
+    let url = $(this).data('url');
+    let p_cate_id = $(this).data('id');
+    Swal.fire({
+      title:'Are you sure?',
+      text: 'Category will be a regular category!',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes proceed!',
+      allowOutsideClick:false
+    }).then(function(result){
+        if(result.value){
+          $.post(url, {p_cate_id:p_cate_id}, function(data){
+              Swal.fire(
+                'Category made regular!',
+                 data,
+                'success'
+              );
+              $('#productCategoryTableID').DataTable().ajax.reload(null,false);
+            
+          });
+        }
+    });
+
+})
+// make category a top category
+$('body').on('click','#topPCategory' ,function(e){
+    e.preventDefault();
+    let url = $(this).data('url');
+    let p_cate_id = $(this).data('id');
+    Swal.fire({
+      title:'Are you sure?',
+      text: 'Category will be a top category',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes proceed!',
+      allowOutsideClick:false
+    }).then(function(result){
+        if(result.value){
+          $.post(url, {p_cate_id:p_cate_id}, function(data){
+              Swal.fire(
+                'Category made a top category!',
+                 data,
+                'success'
+              );
+              $('#productCategoryTableID').DataTable().ajax.reload(null,false);
+            
+          });
+        }
+    });
+
+})
+
+
+
+
+
 
 
 });

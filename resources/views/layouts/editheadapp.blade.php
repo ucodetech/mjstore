@@ -21,6 +21,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('assets_back/dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.css')}}">
   {{-- <link rel="stylesheet" href="{{ asset('admin-assets_back/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}" --}}
@@ -32,6 +33,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Oswald:wght@300;400&family=Passion+One&display=swap" rel="stylesheet">
+
+  
+  {{-- <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" /> --}}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.30.4/filepond.css" integrity="sha512-OwkTbucz29JjQUeii4ZRkjY/E+Xdg4AfffPZICCf98rYKWIHxX87AwwuIQ73rbVrev8goqrKmaXyu+VxyDqr1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- add to document <head> -->
+  <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+    rel="stylesheet"/>
 </head>
 <style>
   *{
@@ -266,6 +274,7 @@
 <script src="{{ asset('assets_back/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 <script src="{{ asset('assets_back/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
@@ -284,18 +293,44 @@
 <script src="{{ asset('assets_back/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/summernote/summernote-bs4.min.js')}}"></script>
 
+{{-- filepond --}}
+{{-- <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script> --}}
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+
+{{-- <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script> --}}
+
+{{-- <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.30.4/filepond.min.js" integrity="sha512-l+50U3iKl0++46sldyNg5mOh27O0OWyWWsU2UnGfIVcxC+fEttAvao0Rns9KclIELHihYJppMWmM5sWof0M7uA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+
 <!-- ChartJS -->
 <script src="{{ asset('assets_back/plugins/chart.js/Chart.min.js')}}"></script>
 {{-- my js --}}
 
 <script>
+        $('body').on('click', '#goBackBtn', function(){
+          history.back();
+        })
     //  var Toast = Swal.mixin({
     //     toast: true,
     //     position: 'top-end',
     //     showConfirmButton: false,
     //     timer: 3000
     //   });
-      
+         // Register the plugin
+         FilePond.registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType, FilePondPluginFileValidateSize, FilePondPluginImageResize, FilePondPluginImageCrop);
+       
+       // Get a reference to the file input element
+          const inputElement = document.querySelector('input[type="file"]');
+          // Create a FilePond instance
+
+
       toastr.options.preventDuplicates = true;
      
   $.ajaxSetup({
@@ -303,25 +338,7 @@
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   })
-  $(function(){
-    $('#edit_banner_description').summernote()
-
-function readURL(input){
-    if(input.files && input.files[0]){
-        let reader = new FileReader();
-        reader.onload = function(e){
-            $('#editbannerPreview').html('<label for="banner_file"><img src="'+e.target.result+'" alt="banner" class="img-fluid"></label>');
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-  $('#edit_banner_file').on('change', function(){
-        readURL(this);
-    })
- 
   
-  })
   </script>
 @yield('scripts')
 </body>

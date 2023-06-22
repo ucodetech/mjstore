@@ -13,7 +13,7 @@
                     <div class="card justify-content-center w-50 m-md-auto">
                         <div class="card-body" id="showBrandPreview">
                             @if($brand->photo != '')
-                                <img src="{{ asset('uploads/brands').'/'.$brand->photo }}" alt="{{ $brand->title }}" class="img-fluid">
+                                <img src="{{ asset('storage/uploads/brands').'/'.$brand->photo }}" alt="{{ $brand->title }}" class="img-fluid">
                                 <hr class="invisible">
                                 <form action="{{ route('superuser.super.delete.brand.image') }}" method="post" enctype="multipart/form-data">
                                     @csrf
@@ -37,13 +37,13 @@
                                 <input type="hidden" name="brand_id" id="brand_id" value="{{ $brand->id }}"> 
                                 <div class="form-group text-center">
                                     @if($brand->photo != '')
-                                    <label for="edit_brand_file">Brand File</label>
-                                    <input type="text" name="edit_brand_file" id="edit_brand_file"
+                                    <label for="brand_file">Brand File</label>
+                                    <input type="text" name="brand_file" id="brand_file"
                                      value="{{ $brand->photo }}" readonly class="form-control text-center"> 
                                     @else
-                                    <input type="file" name="edit_brand_file" id="edit_brand_file" style="display:none">
-                                    <label for="edit_brand_file" class="btn btn-outline-info">Select Image</label>
-                                    <span class="text-danger text-error edit_brand_file_error"></span>
+                                    <input type="file" name="brand_file" id="brand_file">
+                                    {{-- <label for="edit_brand_file" class="btn btn-outline-info">Select Image</label> --}}
+                                    {{-- <span class="text-danger text-error edit_brand_file_error"></span> --}}
                                     @endif
                                 </div> 
                                 <div class="form-group">
@@ -73,26 +73,44 @@
 
 @section('scripts')
         <script>
+            
+            const pond = FilePond.create(inputElement,{
+                    maxFileSize: '100KB',
+                    acceptedFileTypes: ['image/png', 'image/jpeg', 'image/gif'],
+                });
 
-        function readURL(input){
-          if(input.files && input.files[0]){
-              let reader = new FileReader();
-              reader.onload = function(e){
-                  $('#showBrandPreview').html('<label for="edit_brand_file"><img src="'+e.target.result+'" alt="brand" class="img-fluid"></label>');
-              }
-              reader.readAsDataURL(input.files[0]);
-          }
-        }
+            FilePond.setOptions({
+                server:{
+                    process:'../tmp-upload-brand',
+                    revert:'../tmp-revert-brand',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        
+                    }
+
+                }
+            });
+
+
+    //     // function readURL(input){
+    //     //   if(input.files && input.files[0]){
+    //     //       let reader = new FileReader();
+    //     //       reader.onload = function(e){
+    //     //           $('#showBrandPreview').html('<label for="edit_brand_file"><img src="'+e.target.result+'" alt="brand" class="img-fluid"></label>');
+    //     //       }
+    //     //       reader.readAsDataURL(input.files[0]);
+    //     //   }
+    //     // }
         
-         $(function(){
+    //     //  $(function(){
           
-          $('#edit_brand_file').on('change', function(){
-              readURL(this);
-          })
+    //     //   $('#edit_brand_file').on('change', function(){
+    //     //       readURL(this);
+    //     //   })
 
         
        
-    })
+    // })
 
         </script>
 @endsection 

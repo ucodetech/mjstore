@@ -1,41 +1,40 @@
 
-function readURL(input){
+function readURLProd(input){
     if(input.files && input.files[0]){
         let reader = new FileReader();
         reader.onload = function(e){
-            $('#showBrandPreview').html('<label for="brand_fil.e"><img src="'+e.target.result+'" alt="brand image" class="img-fluid"></label>');
+            $('#productPhoto').html('<label for="product_file"><img src="'+e.target.result+'" alt="product image" class="img-fluid" width="100px" height="100px"></label>');
         }
         reader.readAsDataURL(input.files[0]);
     }
 }
 
 $(function(){
+   
+    $('#product_summary').summernote();
+    $('#product_description').summernote();
 
-        //toggle product status
-        $('.productToggle').on('change', function(e){
-            e.preventDefault();
-            let mode = $(this).prop('checked');
-            let product_id = $(this).data('id');
-            let url = $(this).data('url');
-            let token = $(this).data('token');
-            
-            $.ajax({
-                url:url,
-                method:'POST',
-                data:{
-                    _token:token,
-                    mode:mode,
-                    product_id:product_id,
-                },
-                success:function(data){ 
-                   if(data.code==1){
-                    toastr.info(data.msg);
-                   }else{
-                    toastr.error('Please try again');
-                   }
-                }
-            })
-        })
+
+    $('#product_file').on('change', function(){
+        readURLProd(this);
+        
+    })
+
+    // $('#product_color').on('change', function(e){
+    //   e.preventDefault();
+    //   let color = $('#product_color').val();
+    //   alert(color)
+    // })
+
+
+    // Initialize Select2 Elements
+    $('.select2').select2()
+    bsCustomFileInput.init();
+    // Initialize Select2 Elements
+    // $('.select2bs4').select2({
+    //   theme:'bootstrap4'
+    // })
+
 
 
     $('#productsTable').DataTable({
@@ -51,7 +50,76 @@ $(function(){
 
    
 
-    $('#addBrandForm').on('submit', function(e){
+
+
+
+    // deleteBrand
+    $('body').on('click','#deleteProduct' ,function(e){
+        e.preventDefault();
+        let url = $(this).data('url');
+        let product_id = $(this).data('id');
+        Swal.fire({
+          title:'Are you sure?',
+          text: 'File will be deleted!',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes delete it!',
+          allowOutsideClick:false
+        }).then(function(result){
+            if(result.value){
+              $.post(url, {product_id:product_id}, function(data){
+                  if(data.code == 0){
+                    toastr.error(data.error);
+                  }else{
+                    Swal.fire(
+                        'Product Record deleted!',
+                         data.msg,
+                        'success'
+                      );
+                     setTimeout(() => {
+                            location.reload();
+                     }, 2000);
+                      
+                  }
+                
+              });
+            }
+        });
+
+    })
+  
+
+    //view product details
+    $('body').on('click', '#viewProduct', function(e){
+        e.preventDefault()
+        
+        let url = $(this).data('url');
+        let uniquekey = $(this).data('uniquekey');
+        $.post(url, {uniquekey:uniquekey}, function(data){
+            $('#productDetail').modal('show');
+            $('#showProductDetails').html(data);
+        })
+    })
+
+
+    $('#colorTable').DataTable({
+        processing: true,
+        info:true,
+        ajax:'super-colors-list',
+        columns: [
+            {data:'DT_RowIndex', name:'DT_RowIndex'},
+            {data:'color', name:'color'},
+            {data:'actions', name:'actions'}
+        ]
+
+       
+
+    });
+
+   
+
+    $('#addColorForm').on('submit', function(e){
         e.preventDefault();
         let form = this;
         $.ajax({
@@ -65,44 +133,30 @@ $(function(){
                 $(form).find('span.text-error').text('');
             },
             success:function(data){
-                if(data.code === 0){
+                if(data.code == 0){
                     $.each(data.error, function(prefix, val){
                         $(form).find('span.'+prefix+'_error').text(val[0]);
                     })
-                }else{
-                    $('#addBrandForm')[0].reset();
-                    $('#showBrandPreview').html('');
-                    $('#brandTableID').DataTable().ajax.reload(null, false);
+                }else if(data.code == 2){
+                    toastr.error(data.error);
+                 }else{
+                    $('#addColorForm')[0].reset();
+                    $('#colorTable').DataTable().ajax.reload(null, false);
                     toastr.success(data.msg);
                 }
             }
         });
     })
 
-    $('#brand_file').on('change', function(){
-        readURL(this);
-    })
-
-    $('#generateBrandSlugurl').on('click', function(e){
-        e.preventDefault();
-        let brand_title = $('#brand_title').val();
-        let url = 'generate-brand-slugurl';
-        $.get(url, {brand_title:brand_title}, function(data){
-            if(data.code === 1){
-                $('#brand_slug_url').val(data.msg);
-            }else{
-                toastr.error(data.error);
-            }
-        });
-    })
+    
+   
 
 
-
-    // deleteBrand
-    $('body').on('click','#deleteBrand' ,function(e){
+    // deleteProductCategory
+    $('body').on('click','#deleteColor' ,function(e){
         e.preventDefault();
         let url = $(this).data('url');
-        let brand_id = $(this).data('id');
+        let p_cat_id = $(this).data('id');
         Swal.fire({
           title:'Are you sure?',
           text: 'File will be deleted!',
@@ -113,17 +167,19 @@ $(function(){
           allowOutsideClick:false
         }).then(function(result){
             if(result.value){
-              $.post(url, {brand_id:brand_id}, function(data){
+              $.post(url, {p_cat_id:p_cat_id}, function(data){
                   if(data.code == 0){
                     toastr.error(data.error);
                   }else{
                     Swal.fire(
-                        'Brand Record deleted!',
+                        'Category Record deleted!',
                          data,
                         'success'
                       );
-                      $('#brandTableID').DataTable().ajax.reload(null,false);
-                      
+                      $('#productCategoryTableID').DataTable().ajax.reload(null,false);
+                      setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                   }
                 
               });
@@ -131,63 +187,99 @@ $(function(){
         });
 
     })
-    // deactivate brand
-    $('body').on('click','#deactivateBrand' ,function(e){
+
+    $('#sizeTable').DataTable({
+        processing: true,
+        info:true,
+        ajax:'super-sizes-list',
+        columns: [
+            {data:'DT_RowIndex', name:'DT_RowIndex'},
+            {data:'size', name:'size'},
+            {data:'actions', name:'actions'}
+        ]
+
+       
+
+    });
+
+   
+
+    $('#addSizeForm').on('submit', function(e){
         e.preventDefault();
-        let url = $(this).data('url');
-        let brand_id = $(this).data('id');
-        Swal.fire({
-          title:'Are you sure?',
-          text: 'Brand will be deactivated!',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes deactivate it!',
-          allowOutsideClick:false
-        }).then(function(result){
-            if(result.value){
-              $.post(url, {brand_id:brand_id}, function(data){
-                  Swal.fire(
-                    'Brand deactivated!',
-                     data,
-                    'success'
-                  );
-                  $('#brandTableID').DataTable().ajax.reload(null,false);
-                
-              });
+        let form = this;
+        $.ajax({
+            url:$(form).attr('action'),
+            method:$(form).attr('method'),
+            data:new FormData(form),
+            contentType:false,
+            processData:false,
+            dataType: 'json',
+            beforeSend:function(){
+                $(form).find('span.text-error').text('');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    $.each(data.error, function(prefix, val){
+                        $(form).find('span.'+prefix+'_error').text(val[0]);
+                    })
+                }else if(data.code == 2){
+                    toastr.error(data.error);
+                 }else{
+                    $('#addSizeForm')[0].reset();
+                    $('#sizeTable').DataTable().ajax.reload(null, false);
+                    toastr.success(data.msg);
+                }
             }
         });
-
     })
-    // active brand
-    $('body').on('click','#activateBrand' ,function(e){
+
+
+    $('#conditionTable').DataTable({
+        processing: true,
+        info:true,
+        ajax:'super-conditions-list',
+        columns: [
+            {data:'DT_RowIndex', name:'DT_RowIndex'},
+            {data:'condition', name:'condition'},
+            {data:'actions', name:'actions'}
+        ]
+
+       
+
+    });
+
+   
+
+    $('#addConditionForm').on('submit', function(e){
         e.preventDefault();
-        let url = $(this).data('url');
-        let brand_id = $(this).data('id');
-        Swal.fire({
-          title:'Are you sure?',
-          text: 'Brand will activated',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes activate it!',
-          allowOutsideClick:false
-        }).then(function(result){
-            if(result.value){
-              $.post(url, {brand_id:brand_id}, function(data){
-                  Swal.fire(
-                    'Brand Activated!',
-                     data,
-                    'success'
-                  );
-                  $('#brandTableID').DataTable().ajax.reload(null,false);
-                
-              });
+        let form = this;
+        $.ajax({
+            url:$(form).attr('action'),
+            method:$(form).attr('method'),
+            data:new FormData(form),
+            contentType:false,
+            processData:false,
+            dataType: 'json',
+            beforeSend:function(){
+                $(form).find('span.text-error').text('');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    $.each(data.error, function(prefix, val){
+                        $(form).find('span.'+prefix+'_error').text(val[0]);
+                    })
+                }else if(data.code == 2){
+                    toastr.error(data.error);
+                 }else{
+                    $('#addConditionForm')[0].reset();
+                    $('#conditionTable').DataTable().ajax.reload(null, false);
+                    toastr.success(data.msg);
+                }
             }
         });
-
     })
-  
+
+
 
 
 });

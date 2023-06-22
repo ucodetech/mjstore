@@ -52,8 +52,8 @@
                              @csrf
                              @method('POST')
                               <div class="form-group text-center">
-                                <input type="file" name="brand_file" id="brand_file" style="display:none">
-                                <label for="brand_file" class="btn btn-outline-info">Select Image</label>
+                                <input type="file" name="brand_file" id="brand_file">
+                                {{-- <label for="brand_file" class="btn btn-outline-info">Select Image</label> --}}
                                 <hr>
                                 <span class="text-danger text-error brand_file_error"></span>
                               </div> 
@@ -97,7 +97,27 @@
   </div>
   <!-- /.content-wrapper -->
 @endsection
+@section('scripts')
+  <script>
+       const pond = FilePond.create(inputElement,{
+                    maxFileSize: '100KB',
+                    acceptedFileTypes: ['image/png', 'image/jpeg', 'image/gif'],
+                });
 
+    FilePond.setOptions({
+        server:{
+            process:'tmp-upload-brand',
+            revert:'tmp-revert-brand',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                
+            }
+
+        }
+    });
+
+  </script>
+@endsection
 
 
    

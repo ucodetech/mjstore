@@ -21,10 +21,10 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\Superuser::class
     ],
-    // 'editor' => [
-    //     'driver' => 'eloquent',
-    //     'model' => App\Models\Editor::class
-    // ],
+    'seller' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Seller::class
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +51,10 @@ return [
         'superuser' => [
             'driver' => 'session',
             'provider' => 'superusers',
+        ],
+        'seller' => [
+            'driver' => 'session',
+            'provider' => 'sellers'
         ],
     ],
 
@@ -79,6 +83,10 @@ return [
         'superusers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Superuser::class
+        ],
+        'sellers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Seller::class
         ],
 
         // 'users' => [
@@ -111,6 +119,12 @@ return [
         ],
         'superusers' => [
             'provider' => 'superusers',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'sellers' => [
+            'provider' => 'sellers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

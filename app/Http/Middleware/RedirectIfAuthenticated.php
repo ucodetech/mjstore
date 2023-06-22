@@ -26,8 +26,11 @@ class RedirectIfAuthenticated
                 // return redirect(RouteServiceProvider::HOME);
                 if($guard === 'superuser'){
                     return redirect()->route('superuser.super.dashboard');
+                }else if($guard === 'seller'){
+                    return redirect()->route('seller.vendor.dashboard');
+                }else{
+                    return redirect()->route('user.customer.dashboard');
                 }
-                return redirect()->route('user.user.dashboard');
             }
         }
 

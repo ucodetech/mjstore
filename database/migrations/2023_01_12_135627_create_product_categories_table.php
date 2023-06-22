@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id');
             $table->boolean('is_parent')->default(true);
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->boolean('is_top')->default(false);
+
             // $table->foreign('parent_id')->references('id')->on('product_categories')->onDelete('SET NULL');
         });
     }

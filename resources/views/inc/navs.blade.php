@@ -12,13 +12,14 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a href="{{ route('superuser.super.profile') }}" class="nav-link">
           <i class="nav-icon fa fa-user-circle"></i>
           <p>
             Profile
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
+        
         
       </li>
       <li class="nav-header">User Management</li>
@@ -32,23 +33,18 @@
           </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="pages/examples/invoice.html" class="nav-link">
+                <a href="{{ route('superuser.super.superuser.page') }}" class="nav-link">
                   <i class="fa fa-user-secret nav-icon"></i>
                   <p>Superusers</p>
                 </a>
               </li>
           <li class="nav-item">
-            <a href="pages/examples/invoice.html" class="nav-link">
+            <a href="{{ route('superuser.super.user.page') }}" class="nav-link">
               <i class="fa fa-users nav-icon"></i>
-              <p>Customers</p>
+              <p>Users</p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="pages/examples/faq.html" class="nav-link">
-              <i class="fa fa-users nav-icon"></i>
-              <p>Vendors</p>
-            </a>
-          </li>
+         
         </ul>
       </li>
       <li class="nav-header">Store Management</li>
@@ -106,15 +102,41 @@
                   <p>Add Product</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('superuser.super.page.colors') }}" class="nav-link">
+                  <i class="fa fa-coins nav-icon"></i>
+                  <p>Colors</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('superuser.super.page.sizes') }}" class="nav-link">
+                  <i class="fa fa-coins nav-icon"></i>
+                  <p>Sizes</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('superuser.super.page.conditions') }}" class="nav-link">
+                  <i class="fa fa-coins nav-icon"></i>
+                  <p>Conditions</p>
+                </a>
+              </li>
             </ul>
           </li>
           
           <li class="nav-item">
-            <a href="pages/examples/contact-us.html" class="nav-link">
+            <a href="{{ route('superuser.super.orders') }}" class="nav-link">
               <i class="fa fa-layer-group nav-icon"></i>
               <p>Orders</p>
             </a>
           </li>
+                  
+          <li class="nav-item">
+            <a href="{{ route('superuser.super.shipping.method') }}" class="nav-link">
+              <i class="fa fa-layer-group nav-icon"></i>
+              <p>Shipping Method</p>
+            </a>
+          </li>
+          
           <li class="nav-item">
             <a href="pages/examples/contact-us.html" class="nav-link">
               <i class="fa fa-heart nav-icon"></i>
@@ -122,7 +144,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/examples/contact-us.html" class="nav-link">
+            <a href="{{ route('superuser.super.coupon.page') }}" class="nav-link">
               <i class="far fa-circle nav-icon"></i>
               <p>Coupons</p>
             </a>

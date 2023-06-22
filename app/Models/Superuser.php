@@ -30,7 +30,10 @@ class Superuser extends Authenticatable
         'super_profile_photo',
         'deleted',
         'device_Verified',
-        'status'
+        'portfolio',
+        'is_superuser',
+        'status',
+        'email_changed'
     ];
 
 

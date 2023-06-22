@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Superuser;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 
 class BrandController extends Controller
@@ -48,7 +50,7 @@ class BrandController extends Controller
                         })
                        
                         ->addColumn('photoCus', function($row){
-                            return '<img class="img-fluid img-circle" src="'.asset('uploads/brands').'/'.$row->photo.'">';
+                            return '<img class="img-fluid img-circle" src="'.asset('storage/uploads/brands').'/'.$row->photo.'">';
                         })
                         ->rawColumns(['actions', 'status','photoCus'])
                         ->make(true);
@@ -78,31 +80,66 @@ public function addBrand(Request $request){
                     'brand_title' => 'required',
                     'brand_slug_url' => 'required',
                     'brand_status' => 'nullable|in:active,inactie',
-                    'brand_file' => 'nullable|max:5080'
+                   
     ]);
-
+    $tmp_file = TemporaryFile::where('folder', $request->brand_file)->first();
     if(!$validator->passes()){
         // if validation is fail return the error message
+        if($tmp_file){
+            $tmp_path = 'uploads/brand/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($tmp_path);
+            $tmp_file->delete();
+        }
         return response()->json(['code' => 0,  'error'=>$validator->errors()->toArray()]);
     }else{
         //process file upload
-        $newfilename = 'mjstore_brand'.rand(111,999).'.'.$request->brand_file->extension();
-        $request->brand_file->move(public_path('uploads/brands'), $newfilename);
+        $from = 'uploads/brands/tmp/'.$tmp_file->folder .'/'.$tmp_file->file;
+        $to = 'uploads/brands/'.$tmp_file->folder.'/'.$tmp_file->file;
+        Storage::copy($from, $to);
+        $newfilename = $tmp_file->folder .'/'.$tmp_file->file;
 
+        // $request->brand_file->move(public_path('uploads/brands'), $newfilename);
+        
         Brand::create([
             'title' => $request->brand_title,
             'slug' => $request->brand_slug_url,
             'photo' => $newfilename,
             'status' => $request->brand_status,
         ]);
-
+        if($tmp_file){
+            $tmp_path = 'uploads/brand/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($tmp_path);
+            $tmp_file->delete();
+        }
         return response()->json(['code'=>1, 'msg'=>'Brand Created Successfully!']);
     }
 
 }
-
-
-// make banner active
+public function tmpUploadBrand(Request $request){
+    $file = $request->brand_file;
+    if($request->hasFile('brand_file')){
+        $folder = rand(1111,9999);
+        $file_name = 'mjstore_brand' .$folder . '.'.$file->extension();
+        $tmp_path = 'uploads/brands/tmp/';
+        $file->storeAs($tmp_path.$folder, $file_name);
+        TemporaryFile::create([
+            'folder' => $folder,
+            'file' => $file_name
+        ]);
+        return $folder;
+    }
+    return;
+}
+public function tmpDeleteBrand(){
+    $tmp_file = TemporaryFile::where('folder', request()->getContent())->first();
+    if($tmp_file){
+        $tmp_path = 'uploads/brands/tmp/'.$tmp_file->folder;
+        Storage::deleteDirectory($tmp_path);
+        $tmp_file->delete();
+        return;
+    }
+}
+// make brand active
 public function activateBrand(Request $request){
     $brand_id = $request->brand_id;
     Brand::where('id', $brand_id)->update([
@@ -110,7 +147,7 @@ public function activateBrand(Request $request){
     ]);
     return 'Brand has been activated!';
 }
-// make banner in active
+// make brand in active
 public function deactivateBrand(Request $request){
     $brand_id = $request->brand_id;
     Brand::where('id', $brand_id)->update([
@@ -119,11 +156,18 @@ public function deactivateBrand(Request $request){
     return 'Brand has been deactivated!';
 }
 
-//delete banner from database
+//delete brand from database
 public function deleteBrand(Request $request){
     $brand_id = $request->brand_id;
-    Brand::where('id', $brand_id)->delete();
-    return 'Brand has been deleted!';
+    $brand = Brand::where('id', $brand_id)->first();
+    $folder = explode('/', $brand->photo);
+    $folder = $folder[0];
+    $folder_path = 'uploads/brands/'.$folder;
+    if(Storage::deleteDirectory($folder)){
+        Brand::where('id', $brand_id)->delete();
+        return 'Brand has been deleted!';
+    }
+   
 }
 
 public function EditBrand($id){
@@ -136,34 +180,45 @@ public function EditBrand($id){
 public function deleteBrandImage(Request $request){
     $brand_id = $request->brand_id;
     $getimage = Brand::where('id', $brand_id)->get()->first();
-    if(unlink(public_path('uploads/brands').'/'.$getimage->photo)){
-        Brand::where('id', $brand_id)->update(['photo'=>Null]);
-         return redirect()->back()->withErrors('Image Deleted!')->withInput();
+    $folder = explode('/', $getimage->photo);
+    $folder = $folder[0];
+    $folder_path = 'uploads/brands/'.$folder;
+    // if(Storage::deleteDirectory($folder_path)){
+        if(unlink(public_path('uploads/brands'.'/'.$getimage->photo))){
+            Brand::where('id', $brand_id)->update(['photo'=>Null]);
+            return redirect()->back()->withErrors('Image Deleted!')->withInput();
     };
     return false;
 }
 
-// update banner
+// update brand
 
 public function updateBrand(Request $request){
     // validate all request
     $validator = Validator::make($request->all(), [
                     'edit_brand_title' => 'required',
                     'edit_brand_slug_url' => 'required',
-                    'edit_brand_file' => 'nullable|max:5080'
     ]);
-
+    $tmp_file = TemporaryFile::where('folder', $request->brand_file)->first();
     if(!$validator->passes()){
         // if validation is fail return the error message
+        if($tmp_file){
+            $folder = 'uploads/brands/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+            $tmp_file->delete();
+        }
         return redirect()->back()->withErrors($validator->errors())->withInput();
     }else{
         //process file upload
         $brand = Brand::where('id', $request->brand_id)->get()->first();
-        if($request->brand_file != $brand->photo){
-            $newfilename = 'mjstore_brand'.rand(111,999).'.'.$request->edit_brand_file->extension();
-            $request->edit_brand_file->move(public_path('uploads/brands'), $newfilename);
+        if($tmp_file){
+            $from = 'uploads/brands/tmp/'.$tmp_file->folder.'/'.$tmp_file->file;
+            $to = 'uploads/brands/'.$tmp_file->folder . '/' . $tmp_file->file;
+            Storage::copy($from,$to);
+            $newfilename = $tmp_file->folder .'/' . $tmp_file->file;
+          
         }else{
-            $newfilename = $request->edit_brand_file;
+            $newfilename = $request->brand_file;
         }
        
 
@@ -183,6 +238,11 @@ public function updateBrand(Request $request){
             'slug' => $brand_slug_url,
             'photo' => $newfilename,
         ]);
+        if($tmp_file){
+            $folder = 'uploads/brands/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+            $tmp_file->delete();
+        }
 
         return redirect()->route('superuser.super.brands.page')->with('success','Brand Updated Successfully!');
     }

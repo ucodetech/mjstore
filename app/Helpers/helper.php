@@ -173,7 +173,10 @@ function dateDiffInDays($date1, $date2)
     // 24 * 60 * 60 = 86400 seconds
     return abs(round($diff / 86400));
 }
-
+function wrap2($string) {
+    $wstring = explode("\n", wordwrap($string, 20, "\n") );
+    return $wstring[0];
+}
 function wrap($string) {
     $wstring = explode("\n", wordwrap($string, 30, "\n") );
     return $wstring[0];
@@ -182,7 +185,14 @@ function wrap3($string) {
     $wstring = explode("\n", wordwrap($string, 100, "\n") );
     return $wstring[0];
 }
-
+function wrap50($string) {
+    $wstring = explode("\n", wordwrap($string, 50, "\n"));
+    return $wstring[0].'....';
+}
+function wrap20($string) {
+    $wstring = explode("\n", wordwrap($string, 20, "\n"));
+    return $wstring[0].'....';
+}
 function sizeFilter( $bytes )
 {
     $label = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB' );
@@ -216,23 +226,59 @@ else {
 
 }
 
-function mysuperuser(){
-    return auth()->user();
-}
 
-function myuser(){
-    return auth()->user();
-}
-
-function isGraphicDesigner($user){
-    $user = myuser();
-}
 
 //naira money format
 function Naira($money){
     return '₦'.number_format($money, 2);
 }
+function NairaSign(){
+    return '₦';
+}
 //dollar money format
 function Dollar($money){
     return '$'.number_format($money, 2);
+}
+
+//get percentage
+function N2P($var){
+    return round((int)$var / 100 ) . '%';
+}
+
+function cal_percentage($num) {
+    $count1 = $num / 100;
+    $count2 = $count1 * 100;
+    $count = number_format($count2, 0);
+    return $count;
+}
+//inout to string
+function IN2String($str){
+    return strval($str);
+}
+
+function removeTag($string){
+    return strip_tags($string);
+}
+
+function Filter($value){
+    return filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+}
+function removeComma($value){
+    return filter_var($value, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+}
+
+function muser(){
+    if(auth()->check()){
+        return auth()->user();
+    }
+}
+
+function userPhone($phone){
+    $phone = explode(',' ,$phone);
+    return $phone;
+}
+
+function productPhoto($photo){
+    $photo = explode(',' ,$photo);
+    return $photo;
 }

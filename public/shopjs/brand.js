@@ -3,7 +3,7 @@ function readURL(input){
     if(input.files && input.files[0]){
         let reader = new FileReader();
         reader.onload = function(e){
-            $('#showBrandPreview').html('<label for="brand_fil.e"><img src="'+e.target.result+'" alt="brand image" class="img-fluid"></label>');
+            $('#showBrandPreview').html('<label for="brand_file"><img src="'+e.target.result+'" alt="brand image" class="img-fluid"></label>');
         }
         reader.readAsDataURL(input.files[0]);
     }

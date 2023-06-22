@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\IsSuperuser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -63,5 +64,12 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'is_superuser' => \App\Http\Middleware\IsSuperuser::class,
+        'is_user_email_verified' => \App\Http\Middleware\isUserEmailVerified::class,
+        'is_super_email_verified' => \App\Http\Middleware\isSuperEmailVerified::class,
+        'is_user_seller' => \App\Http\Middleware\whoIsUser::class,
+        'is_logged_in' => \App\Http\Middleware\IsUserloggedIn::class,
+        'is_cart_empty' => \App\Http\Middleware\IsCartEmpty::class,
+
     ];
 }

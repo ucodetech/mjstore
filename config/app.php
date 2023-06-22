@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -182,6 +182,10 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class, 
+
+
+
 
         /*
          * Package Service Providers...
@@ -212,6 +216,9 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+
+
 
     ])->toArray(),
 

@@ -9,6 +9,7 @@ class Product extends Model
 {
     use HasFactory;
     protected $fillable = [
+                    'photo',
                     'title',
                     'slug',
                     'summary',
@@ -18,13 +19,18 @@ class Product extends Model
                     'cat_id',
                     'child_cat_id',
                     'price',
-                    'offer_price',
-                    'discount',
+                    'sales_price',
+                    'product_discount',
                     'weights',
                     'size',
                     'condition',
                     'vendor_id',
-                    'status'
+                    'status',
+                    'color',
+                    'unique_key',
+                    'home_shop',
+                    'featured',
+                    
     ];
 
     /**
@@ -55,6 +61,25 @@ class Product extends Model
     public function vendor()
     {
         return $this->belongsTo(User::class);
+    }
+
+
+    public static function getProductByCart($id){
+        return self::where('id', $id)->get()->toArray();
+    }
+
+  
+
+    
+
+    /**
+     * Get the orderitem that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderitems()
+    {
+        return $this->belongsTo(OrderItems::class);
     }
 
 }

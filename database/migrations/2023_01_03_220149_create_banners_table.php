@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('photo');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->enum('condition', ['banner', 'promo'])->default('banner');
+            $table->string('price_description');
+            $table->string('link');
+            $table->string('link_descriptions');
         });
     }
 

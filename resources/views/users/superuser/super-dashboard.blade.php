@@ -839,8 +839,39 @@
         
       </div><!--/. container-fluid -->
     </section>
+    <input type="hidden" name="temp_url" id="temp_url" value="{{ route('superuser.super.delete.temp.files') }}">
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
 
+@endsection
+@section('scripts')
+    <script>
+
+      $(function(){
+        // setInterval(() => {
+        //   deleteTempFile();
+        // }, 1000);
+        deleteTempFile();
+        function deleteTempFile(){
+            let url = $('#temp_url').val();
+            let token = "{{ csrf_token() }}";
+            // alert(url);
+            $.ajax({
+              url:url,
+              method:'POST',
+              data: {
+                deleteTempFiles:'deleteTmpFiles',
+                _token:token
+              },
+              success:function(data){
+                toastr.info(data)
+              }
+            })
+        }
+
+
+      })
+
+    </script>
 @endsection

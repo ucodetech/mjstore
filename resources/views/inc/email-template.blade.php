@@ -7,7 +7,7 @@
     <title>Email Template - {{ config('app.name') }}</title>
 </head>
 <body>
-        <div style="width:40%; margin: 10px auto; 
+        <div style="width:50%; margin: 10px auto; 
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-weight:bold; font-size:30px; 
         ">
            <center> <img src="{{ asset('assets2/images/gtechno.png') }}" alt="gtechno" width="208" 
@@ -39,7 +39,10 @@
                 <hr>
                 <small style="color: grey">
                 If you are having troubles clicking the button, please copy the link below and paste on a new browser tab</small>
-                <br><a href="{{ $actionLink }}">{{ $actionLink }} </a>
+                <br>
+                <div href="width:auto;overflow:scroll">
+                    <a href="{{ $actionLink }}" >{{ $actionLink }} </a>
+                </div>
                device-verification
             </div>
         </div> 

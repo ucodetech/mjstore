@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Banner;
+use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
  
 
 
@@ -64,7 +66,7 @@ class BannerController extends Controller
                             }
                         })
                         ->addColumn('photoCus', function($row){
-                            return '<img class="img-fluid img-circle" src="'.asset('uploads/banners').'/'.$row->photo.'">';
+                            return '<img class="img-rounded" width="80" src="'.asset('storage/uploads/banners').'/'.$row->photo.'">';
                         })
                         ->rawColumns(['actions', 'status', 'condition', 'photoCus'])
                         ->make(true);
@@ -109,29 +111,70 @@ public function addBanner(Request $request){
                     'banner_description' => 'required',
                     'banner_status' => 'required',
                     'banner_condition' => 'required',
-                    'banner_file' => 'required|max:5080'
+                    'price_description' => 'nullable',
+                    'link' => 'nullable',
+                    'link_descriptions' => 'nullable'
     ]);
+    $tmp_file = TemporaryFile::where('folder', $request->banner_file)->get()->first();
 
     if(!$validator->passes()){
         // if validation is fail return the error message
+        if($tmp_file){
+            Storage::deleteDirectory('uploads/banners/tmp/'.$tmp_file->folder);
+            $tmp_file->delete();
+        }
         return response()->json(['code' => 0,  'error'=>$validator->errors()->toArray()]);
     }else{
         //process file upload
-        $newfilename = 'mjstore_banner'.rand(111,999).'.'.$request->banner_file->extension();
-        $request->banner_file->move(public_path('uploads/banners'), $newfilename);
-
+        if($tmp_file){
+            $from = 'uploads/banners/tmp/'.$tmp_file->folder .'/'. $tmp_file->file;
+            $to = 'uploads/banners/'.$tmp_file->folder. '/'. $tmp_file->file;
+            Storage::copy($from, $to);
+        
         Banner::create([
             'title' => $request->banner_title,
             'slug' => $request->banner_slug_url,
             'description' => $request->banner_description,
-            'photo' => $newfilename,
+            'price_description' => $request->price_description,
+            'link' => $request->link,
+            'link_descriptions' => $request->link_descriptions,
+            'photo' => $tmp_file->folder.'/'.$tmp_file->file,
             'status' => $request->banner_status,
             'condition' => $request->banner_condition
         ]);
-
+            if($tmp_file){
+                Storage::deleteDirectory('uploads/banners/tmp/'.$tmp_file->folder);
+                $tmp_file->delete();
+                }
         return response()->json(['code'=>1, 'msg'=>'Banner Uploaded Successfully!']);
+        }
     }
 
+}
+
+public function tmpUploadBanner(Request $request){
+    $file = $request->banner_file;
+    if($request->hasFile('banner_file')){
+        $folder = rand(1111,9999);
+        $file_name = 'mjstore_banner'.$folder.'.'.$file->extension();
+        $file->storeAs('uploads/banners/tmp/'.$folder, $file_name);
+        TemporaryFile::create([
+            'folder' => $folder,
+            'file' => $file_name
+        ]);
+        return $folder;
+     }
+        return '';
+    
+}
+
+public function tmpDeleteBanner(){
+    $tmp_file = TemporaryFile::where('folder', request()->getContent())->first();
+    if($tmp_file){
+        Storage::deleteDirectory('uploads/banners/tmp/'.$tmp_file->folder);
+        $tmp_file->delete();
+        return;
+    }
 }
 
 
@@ -170,8 +213,17 @@ public function bannerBanner(Request $request){
 //delete banner from database
 public function deleteBanner(Request $request){
     $banner_id = $request->banner_id;
-    Banner::where('id', $banner_id)->delete();
-    return 'Banner has been deleted!';
+    $banner = Banner::where('id', $banner_id)->get()->first();
+    if($banner->status == 'active'){
+        return response()->json(['code'=>0, 'error'=>'Please deactivate banner before deleting']);
+    }else{
+            $getfolder = explode('/', $banner->photo);
+            $folder = 'uploads/banners/'.$getfolder[0];
+            if(Storage::deleteDirectory($folder)){
+            Banner::where('id', $banner_id)->delete();
+            return response()->json(['code'=>1, 'msg'=>'Banner Deleted Successfully']);
+        }
+    }
 }
 
 public function EditBanner($id){
@@ -198,14 +250,16 @@ public function EditBanner($id){
 public function deleteBannerImage(Request $request){
     $bannerid = $request->banner_id;
     $getimage = Banner::where('id', $bannerid)->get()->first();
-    if(unlink(public_path('uploads/banners').'/'.$getimage->photo)){
-        Banner::where('id', $bannerid)->update(['photo'=>Null]);
+        $getfolder = explode('/', $getimage->photo);
+        $folder = 'uploads/banners/'.$getfolder[0];
+        if(Storage::deleteDirectory($folder)){
+         Banner::where('id', $bannerid)->update(['photo'=>Null]);
          return redirect()->back()->withErrors('Image Deleted!')->withInput();
     };
     return false;
 }
 
-// update banner
+// update bannerato,
 
 public function updateBanner(Request $request){
     // validate all request
@@ -213,18 +267,27 @@ public function updateBanner(Request $request){
                     'edit_banner_title' => 'required',
                     'edit_banner_slug_url' => 'required',
                     'edit_banner_description' => 'required',
-                    'banner_file' => 'required|max:5080'
+                    'edit_price_description' => 'nullable',
+                    'edit_link' => 'nullable',
+                    'edit_link_descriptions' => 'nullable'
     ]);
 
+    $tmp_file = TemporaryFile::where('folder', $request->banner_file)->first();
     if(!$validator->passes()){
         // if validation is fail return the error message
+        if($tmp_file){
+            Storage::deleteDirectory('uploads/banners/tmp/'.$tmp_file->folder);
+            $tmp_file->delete();
+        }
         return redirect()->back()->withErrors($validator->errors())->withInput();
     }else{
         //process file upload
         $banner = Banner::where('id', $request->banner_id)->get()->first();
-        if($request->banner_file != $banner->photo){
-            $newfilename = 'mjstore_banner'.rand(111,999).'.'.$request->banner_file->extension();
-            $request->banner_file->move(public_path('uploads/banners'), $newfilename);
+        if($tmp_file){
+            $from = 'uploads/banners/tmp/'.$tmp_file->folder .'/'. $tmp_file->file;
+            $to = 'uploads/banners/'.$tmp_file->folder. '/'. $tmp_file->file;
+            Storage::copy($from, $to);
+            $newfilename = $tmp_file->folder.'/'.$tmp_file->file;
         }else{
             $newfilename = $request->banner_file;
         }
@@ -246,8 +309,14 @@ public function updateBanner(Request $request){
             'slug' => $banner_slug_url,
             'description' => $request->edit_banner_description,
             'photo' => $newfilename,
+            'price_description' => $request->edit_price_description,
+            'link' => $request->edit_link,
+            'link_descriptions' => $request->edit_link_descriptions
         ]);
-
+        if($tmp_file){
+            Storage::deleteDirectory('uploads/banners/tmp/'.$tmp_file->folder);
+            $tmp_file->delete();
+        }
         return redirect()->route('superuser.super.banner.page')->with('success','Banner Updated Successfully!');
     }
 

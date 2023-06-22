@@ -11,17 +11,17 @@
       <div class="container-fluid">
           <!-- Info boxes -->
            
-                <div class="card m-md-auto w-50">
+                {{-- <div class="card m-md-auto w-50">
                   <div class="card-header">Preveiw Product Category Image</div>
                   <div class="card-body" id="editshowProductCategoryPreview"></div>
-                </div>
+                </div> --}}
                   <div class="card m-md-auto w-50">
                       <div class="card-header">
                           Edit <span class="text-warning">{{ $category->title }}</span> Category
                       </div>
                       <div class="card-body">
                         @if ($category->photo != '')
-                          <img src="{{ asset('uploads/products/category').'/'.$category->photo }}" alt="{{ $category->title }}" class="img-fluid">
+                          <img src="{{ asset('storage/uploads/products/category').'/'.$category->photo }}" alt="{{ $category->title }}" class="img-fluid">
                           <hr class="invisible">  
                           <form action="{{ route('superuser.super.delete.product.category.image') }}" method="post">
                             @csrf
@@ -39,13 +39,13 @@
                             <div class="form-group text-center">
                                 @if ($category->photo != '')
                                   <label for="edit_product_category_file">Photo</label>
-                                  <input type="text" name="edit_product_category_file" id="edit_product_category_file"
+                                  <input type="text" name="product_category_file" id="product_category_file"
                                   class="form-control" value="{{ $category->photo }}">
                                 @else
-                                  <input type="file" name="edit_product_category_file" id="edit_product_category_file" style="display:none">
-                                  <label for="edit_product_category_file" class="btn btn-outline-info">Select Image</label>
+                                  <input type="file" name="product_category_file" id="product_category_file">
+                                  {{-- <label for="eproduct_category_file" class="btn btn-outline-info">Select Image</label> --}}
                                   <hr>
-                                  <span class="text-danger text-error edit_product_category_file_error"></span>
+                                  {{-- <span class="text-danger text-error edit_product_category_file_error"></span> --}}
                               @endif
                             </div> 
                             <div class="form-group">
@@ -104,21 +104,35 @@
 @section('scripts')
         <script>
 
-        function readURL(input){
-          if(input.files && input.files[0]){
-              let reader = new FileReader();
-              reader.onload = function(e){
-                  $('#editshowProductCategoryPreview').html('<label for="edit_product_category_file"><img src="'+e.target.result+'" alt="product category" class="img-fluid"></label>');
-              }
-              reader.readAsDataURL(input.files[0]);
-          }
-        }
+          const pond = FilePond.create(inputElement, {
+                      maxFileSize: '100KB',
+                      acceptedFileTypes: ['image/png', 'image/jpeg']
+          });
+
+          FilePond.setOptions({
+            server:{
+                process:'../tmp-upload-category',
+                revert:'../tmp-revert-category',
+                headers:{
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                }
+            }
+          });
+        // function readURL(input){
+        //   if(input.files && input.files[0]){
+        //       let reader = new FileReader();
+        //       reader.onload = function(e){
+        //           $('#editshowProductCategoryPreview').html('<label for="edit_product_category_file"><img src="'+e.target.result+'" alt="product category" class="img-fluid"></label>');
+        //       }
+        //       reader.readAsDataURL(input.files[0]);
+        //   }
+        // }
         
          $(function(){
           
-          $('#edit_product_category_file').on('change', function(){
-              readURL(this);
-          })
+          // $('#edit_product_category_file').on('change', function(){
+          //     readURL(this);
+          // })
           $('#edit_product_category_summary').summernote();
 
         
@@ -130,8 +144,8 @@
           }else{
               $('#editparentCategoryBtn').removeClass('d-none');
               $('#edit_parent_id').val('');
-          }
-    })
+            }
+        })
 
 
          })

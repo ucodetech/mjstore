@@ -20,14 +20,31 @@ class User extends Authenticatable
     protected $fillable = [
         'fullname',
         'email',
+        'username',
         'password',
         'phone_number',
         'photo',
         'address',
+        'apartment_suite_unit',
+        'town_city',
+        'state',
+        'country',
+        'postcode_zip',
+        'additional_order_note',
         'status',
         'role',
         'deleted',
-        'last_login'
+        'last_login',
+        'unique_id',
+        'email_verified',
+        'ship_to_address',
+        'ship_to_apartment_suite_unit',
+        'ship_to_town_city',
+        'ship_to_state',
+        'ship_to_country',
+        'ship_to_postcode_zip',
+        
+
     ];
 
     /**
@@ -48,4 +65,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * Get all of the orders for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'id');
+    }
+
+    /**
+     * Get all of the temporarycheckoutprocesses for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function temporarycheckoutprocesses()
+    {
+        return $this->hasMany(TemporaryCheckoutProcess::class, 'id');
+    }
 }

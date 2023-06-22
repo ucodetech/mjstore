@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Superuser;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProductCategory;
+use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductCategoryController extends Controller
 {
@@ -70,12 +72,29 @@ class ProductCategoryController extends Controller
                        
                         ->addColumn('photoCus', function($row){
                             if($row->photo != ''){
-                                return '<img class="img-circle shadow-lg" width="50" src="'.asset('uploads/products/category').'/'.$row->photo.'">';
+                                return '<img class="img-circle shadow-lg" width="50" src="'.asset('storage/uploads/products/category').'/'.$row->photo.'">';
                             }else{
                                 return '<button class="btn btn-warning btn-rounded">No image</button>';
                             }
                         })
-                        ->rawColumns(['actions', 'status', 'photoCus', 'isParent', 'parent_category'])
+                        ->addColumn('is_top', function($row){
+                            
+                            if($row->is_top === 1){
+                                return ' <button type="button" 
+                                data-id="'.$row->id.'" 
+                                data-url="'.route('superuser.super.regular.product.category').'"
+                                id="regularPCategory" 
+                                class="btn btn-outline-warning" title="Make Category Regular">Regular</button>';
+                            }else{
+                                return '<button type="button" 
+                                data-id="'.$row->id.'" 
+                                data-url="'.route('superuser.super.top.product.category').'"
+                                id="topPCategory" 
+                                class="btn btn-outline-success" title="Make Category Top">Top</button>';
+                            }
+                                    
+                        })
+                        ->rawColumns(['actions', 'status', 'photoCus', 'isParent', 'parent_category', 'is_top'])
                         ->make(true);
     }
 
@@ -106,38 +125,77 @@ public function addPcategory(Request $request){
                     'product_category_status' => 'nullable|in:active,inactive',
                     'is_parent' => 'nullable|in:1',
                     'parent_id' => 'nullable',
-                    'product_category_file' => 'nullable|max:5080'
     ]);
-
+    $tmp_file = TemporaryFile::where('folder', $request->product_category_file)->first();
     if(!$validator->passes()){
         // if validation is fail return the error message
+        if($tmp_file){
+            $folder = 'uploads/products/category/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+            $tmp_file->delete();
+        }
         return response()->json(['code' => 0,  'error'=>$validator->errors()->toArray()]);
     }else{
         //process file upload
-        if($request->product_category_file != ''){
-            $newfilename = 'mjstore_prod_category'.rand(111,999).'.'.$request->product_category_file->extension();
-            $request->product_category_file->move(public_path('uploads/products/category'), $newfilename);
+        if($tmp_file){
+            $from = 'uploads/products/category/tmp/'.$tmp_file->folder .'/'. $tmp_file->file;
+            $to = 'uploads/products/category/'.$tmp_file->folder. '/' .$tmp_file->file;
+            Storage::copy($from, $to);
+            $newfilename = $tmp_file->folder . '/' . $tmp_file->file;
         }else{
             $newfilename = null;
         }
-
+        if($request->is_parent){
+            $is_parent = 1;
+        }else{
+            $is_parent = 0;
+        }
         ProductCategory::create([
             'title' => $request->product_category_title,
             'slug' => $request->product_category_slug_url,
             'summary' => $request->product_category_summary,
             'photo' => $newfilename,
             'status' => $request->product_category_status,
-            'is_parent' => $request->is_parent,
-            'parent_id' => $request->parent_id
+            'is_parent' => $is_parent,
+            'parent_id' => $request->parent_id,
+            
         ]);
-
+        if($tmp_file){
+            $folder = 'uploads/products/category/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+            $tmp_file->delete();
+        }
         return response()->json(['code'=>1, 'msg'=>'Product Category Created Successfully!']);
     }
 
 }
 
+public function tmpUploadCategory(Request $request){
+    $file = $request->product_category_file;
+    if($request->hasFile('product_category_file')){
+        $folder = rand(1111,9999);
+        $file_name = 'mjstore_product_category' . $folder . $file->extension();
+        $file->storeAs('uploads/products/category/tmp/'.$folder, $file_name);
+        TemporaryFile::create([
+            'folder' => $folder,
+            'file' => $file_name
+        ]);
+        return $folder;
+    }
+    return;
+}
 
-// make banner active
+public function tmpDeleteCategory(Request $request){
+        $tmp_file = TemporaryFile::where('folder', request()->getContent())->first();
+        if($tmp_file){
+            $folder = 'uploads/products/category/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+            $tmp_file->delete();
+            return;
+        }
+}
+
+// make product category active
 public function activePcategory(Request $request){
     $p_cate_id = $request->p_cate_id;
     ProductCategory::where('id', $p_cate_id)->update([
@@ -145,7 +203,7 @@ public function activePcategory(Request $request){
     ]);
     return 'Category has been activated!';
 }
-// make banner in active
+// make product category in active
 public function inactivePcategory(Request $request){
     $p_cate_id = $request->p_cate_id;
     ProductCategory::where('id', $p_cate_id)->update([
@@ -154,11 +212,29 @@ public function inactivePcategory(Request $request){
     return 'Category has been deactivated!';
 }
 
-//delete banner from database
+// make category top
+public function topPcategory(Request $request){
+    $p_cate_id = $request->p_cate_id;
+    ProductCategory::where('id', $p_cate_id)->update([
+        'is_top' => true
+    ]);
+    return 'Category made Top!';
+}
+// make category regular
+public function regularPcategory(Request $request){
+    $p_cate_id = $request->p_cate_id;
+    ProductCategory::where('id', $p_cate_id)->update([
+        'is_top' => false
+    ]);
+    return 'Category made Regular';
+   
+}
+//delete product category from database
 public function deletePcategory(Request $request){
     $p_cat_id = $request->p_cat_id;
     //request to deactivate category before deleting
-    if(ProductCategory::where('id', $p_cat_id)->get()->first()->status == 'active'){
+    $product =  ProductCategory::where('id', $p_cat_id)->get()->first();
+    if($product->status == 'active'){
         return response()->json(['code'=>0, 'error'=>'Please deactivate category before deleting!']);
     }
     //find category children if it has
@@ -168,16 +244,17 @@ public function deletePcategory(Request $request){
         // call the shift child function from the product category model and change all child category to parent category
             ProductCategory::shiftChild($child_cat_id);
         // shift child function converts child category to parent category
-        
-        //get category to unlink the file if it has
-        $catfile = ProductCategory::where('id', $p_cat_id)->get()->first();
-         //delete category
-         if($catfile->photo != ''){
-            unlink(public_path('uploads/products/category').'/'.$catfile->photo);
-         }
-
-         ProductCategory::where('id', $p_cat_id)->delete();
     }
+    //get category to unlink the file if it has
+    $catfile = ProductCategory::where('id', $p_cat_id)->get()->first();
+    //delete category
+    if($catfile->photo != ''){
+        $folder = explode('/', $product->photo);
+        $folder_path = $folder[0];
+        Storage::deleteDirectory($folder_path);
+    }
+
+    ProductCategory::where('id', $p_cat_id)->delete();
     return response()->json(['code'=>1, 'msg'=>'Category Deleted and all children set to parent!']);
 }
 
@@ -206,14 +283,17 @@ public function EditPcategory($id){
 public function deletePcategoryImage(Request $request){
     $cateid = $request->category_id;
     $getimage = ProductCategory::where('id', $cateid)->get()->first();
-    if(unlink(public_path('uploads/products/category').'/'.$getimage->photo)){
+    $folder = $getimage->photo;
+    $folder = explode('/', $folder);
+    $folder_path = 'uploads/products/category/'.$folder[0];
+    if(Storage::deleteDirectory($folder_path)){
         ProductCategory::where('id', $cateid)->update(['photo'=>Null]);
          return redirect()->back()->withErrors('Image Deleted!')->withInput();
     };
     return false;
 }
 
-// update banner
+// update product category
 
 public function updatePCategory(Request $request){
     // validate all request
@@ -223,20 +303,26 @@ public function updatePCategory(Request $request){
                     'edit_product_category_summary' => 'required',
     ]);
     
-
+    $tmp_file = TemporaryFile::where('folder', $request->product_category_file)->first();
     if(!$validator->passes()){
         // if validation is fail return the error message
+        if($tmp_file){
+            $folder = 'uploads/products/category/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+        }
         return redirect()->back()->withErrors($validator->errors())->withInput();
     }else{
         //process file upload
         $category = ProductCategory::where('id', $request->category_id)->get()->first();
-        if($request->edit_product_category_file != $category->photo){
-            $newfilename = 'mjstore_category'.rand(111,999).'.'.$request->edit_product_category_file->extension();
-            $request->edit_product_category_file->move(public_path('uploads/products/category'), $newfilename);
+        if($tmp_file){
+            $from = 'uploads/products/category/tmp/'.$tmp_file->folder . '/' . $tmp_file->file;
+            $to = 'uploads/products/category/'.$tmp_file->folder . '/' . $tmp_file->file;
+            Storage::copy($from, $to);
+            $newfilename = $tmp_file->folder . '/' . $tmp_file->file;
         }else{
-            $newfilename = $request->edit_product_category_file;
+            $newfilename = $request->product_category_file;
         }
-       
+      
 
         if($category->title != $request->edit_product_category_title){
             $category_slug_url = Str::slug($request->edit_product_category_title);
@@ -255,7 +341,11 @@ public function updatePCategory(Request $request){
             'summary' => $request->edit_product_category_summary,
             'photo' => $newfilename,
         ]);
-
+        if($tmp_file){
+            $folder = 'uploads/products/category/tmp/'.$tmp_file->folder;
+            Storage::deleteDirectory($folder);
+            $tmp_file->delete();
+          }
         return redirect()->route('superuser.super.product.category.page')->with('success','Category Updated Successfully!');
     }
 

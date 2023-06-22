@@ -16,7 +16,8 @@ class ProductCategory extends Model
                     'summary',
                     'parent_id',
                     'is_parent',
-                    'status'
+                    'status',
+                    'is_top'
                 ];
 
     public static function shiftChild($child_cat_id){
@@ -34,8 +35,13 @@ class ProductCategory extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function product()
+    public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'cat_id'); // you pass forign key so as to override laravel from using default check
+    }
+
+    public static function catChild($id){
+        return self::where('parent_id', $id)->get();
     }
 }
+

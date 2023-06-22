@@ -1,5 +1,5 @@
 
-function readURL(input){
+function readURLBanner(input){
     if(input.files && input.files[0]){
         let reader = new FileReader();
         reader.onload = function(e){
@@ -49,16 +49,17 @@ $(function(){
                     })
                 }else{
                     $('#addBannerForm')[0].reset();
-                    $('#showBannerPreview').html('');
+                    $('#banner_descriptions').html('');
                     $('#bannerTableID').DataTable().ajax.reload(null, false);
                     toastr.success(data.msg);
                 }
             }
         });
     })
+    
 
     $('#banner_file').on('change', function(){
-        readURL(this);
+        readURLBanner(this);
     })
 
     $('#generateBannerSlugurl').on('click', function(e){
@@ -105,12 +106,21 @@ $(function(){
         }).then(function(result){
             if(result.value){
               $.post(url, {banner_id:banner_id}, function(data){
-                  Swal.fire(
-                    'Banner Record deleted!',
-                     data,
-                    'success'
-                  );
-                  $('#bannerTableID').DataTable().ajax.reload(null,false);
+                 if(data.code == 0){
+                    Swal.fire(
+                        'Error!',
+                         data.error,
+                        'error'
+                      );
+                      
+                 }else{
+                    Swal.fire(
+                        'Banner Record deleted!',
+                         data.msg,
+                        'success'
+                      );
+                      $('#bannerTableID').DataTable().ajax.reload(null,false);
+                 }
                 
               });
             }

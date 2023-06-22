@@ -37,8 +37,8 @@
                             <input type="hidden" name="banner_id" id="banner_id" value="{{ $banner->id }}">
                             @if($banner->photo == '')
                             <div class="form-group text-center">
-                                <input type="file" name="banner_file" id="banner_file" style="display:none">
-                                <label for="banner_file" class="btn btn-outline-info">Select Image</label>
+                                <input type="file" name="banner_file" id="banner_file">
+                                {{-- <label for="banner_file" class="btn btn-outline-info">Select Image</label> --}}
                             <hr>
                             <span class="text-danger text-error banner_file_error"></span>
                             </div> 
@@ -62,6 +62,21 @@
                                      <span class="text-danger text-error edit_banner_slug_url_error"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label for="edit_price_description">Price Description</label>
+                                    <input type="text" name="edit_price_description" id="edit_price_description" class="form-control" value="{{ $banner->price_description }}"
+                                    aria-describedby="helpId">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="edit_link">Link</label>
+                                    <input type="text" name="edit_link" id="edit_link" class="form-control" value="{{ $banner->link }}"
+                                    aria-describedby="helpId">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="edit_link_descriptions">Link Description</label>
+                                    <input type="text" name="edit_link_descriptions" id="edit_link_descriptions" class="form-control" value="{{ $banner->link_descriptions }}"
+                                    aria-describedby="helpId">
+                                  </div>
+                                <div class="form-group">
                                     <label for="">Description</label>
                                     <textarea class="form-control" 
                                     name="edit_banner_description" id="edit_banner_description" rows="3">{{ $banner->description }}</textarea>
@@ -79,7 +94,66 @@
 @endsection
 
 
+@section('scripts')
+  <script>
 
+// function readURLBanner(input){
+//     if(input.files && input.files[0]){
+//         let reader = new FileReader();
+//         reader.onload = function(e){
+//             $('#showBannerPreview').html('<label for="banner_file"><img src="'+e.target.result+'" alt="banner" class="img-fluid"></label>');
+//         }
+//         reader.readAsDataURL(input.files[0]);
+//     }
+// }
+
+//    $(function(){
+//         $('#banner_file').on('change', function(){
+//             readURLBanner(this);
+//         })
+//    })
+
+    const pond = FilePond.create(inputElement,{
+                    maxFileSize: '100KB',
+                    acceptedFileTypes: ['image/png', 'image/jpeg', 'image/gif'],
+                });
+
+    FilePond.setOptions({
+        server:{
+            process:'../tmp-upload-banner',
+            revert:'../tmp-revert-banner',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                
+            }
+
+        }
+    });
+
+
+
+    $(function(){
+    $('#edit_banner_description').summernote()
+
+    // function readURL(input){
+    //     if(input.files && input.files[0]){
+    //         let reader = new FileReader();
+    //         reader.onload = function(e){
+    //             $('#editbannerPreview').html('<label for="banner_file"><img src="'+e.target.result+'" alt="banner" class="img-fluid"></label>');
+    //         }
+    //         reader.readAsDataURL(input.files[0]);
+    //     }
+    // }
+
+    // $('#edit_banner_file').on('change', function(){
+    //         readURL(this);
+    //     })
+    
+    
+  })
+
+  </script>
+@endsection
    
 
    

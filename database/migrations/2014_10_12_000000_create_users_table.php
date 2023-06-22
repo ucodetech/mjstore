@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('fullname');
             $table->string('username')->nullable()->unique();
+            $table->string('unique_id')->unique();
             $table->string('email')->unique();
             $table->boolean('email_verified')->nullable()->default(false);
             $table->string('phone_number')->unique();
@@ -25,7 +26,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->text('address');
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->enum('role', ['vendor', 'customer'])->default('customer');
+            $table->enum('role', ['customer'])->default('customer');
             $table->boolean('deleted')->nullable()->default(false);
             $table->timestamp('last_login')->default(Carbon::now());
             $table->rememberToken();

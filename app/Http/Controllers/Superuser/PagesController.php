@@ -25,7 +25,7 @@ class PagesController extends Controller
 
     public function showProductCategoryPage(){
         $product_category = ProductCategory::where('status', 'active')->orderBy('parent_id', 'desc')->get();
-        return view('users.superuser.product.super-productcategory', compact('product_category', $product_category));
+        return view('users.superuser.product.super-productcategory', ['product_category'=> $product_category]);
     }
 
 

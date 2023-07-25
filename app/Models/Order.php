@@ -61,4 +61,8 @@ class Order extends Model
         {
             return $this->hasMany(OrderItems::class);
         }
+
+        public static function OrderSelf($order_id){
+            return self::where('order_number', $order_id)->get()->first();
+        }
 }

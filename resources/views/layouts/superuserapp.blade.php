@@ -45,7 +45,7 @@
   <!-- add to document <head> -->
 <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
     rel="stylesheet"/>
-
+  @vite('resources/js/app.js')
 </head>
 <style>
   *{
@@ -58,7 +58,8 @@
     font-family: 'Oswald', sans-serif; 
     font-family: 'Passion One', cursive;
   } */
-</style>href
+  
+</style>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
 

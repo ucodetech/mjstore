@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\Shipping;
+
 function hasPermission($permission){
     $permissions = auth()->user()->permission;
     $userPermissions = explode(',', $permissions);
@@ -223,7 +226,6 @@ else {
     return $weekOfYear;
 }
 
-
 }
 
 
@@ -281,4 +283,25 @@ function userPhone($phone){
 function productPhoto($photo){
     $photo = explode(',' ,$photo);
     return $photo;
+}
+
+function getShippingMethod($shipping_id){
+    return App\Models\Shipping::where('id', $shipping_id)->get()->first();
+}
+
+function formattedOrderStatus($order_status){
+    switch ($order_status) {
+        case 'pending':
+            return "badge-warning";
+            break;
+        case 'processing':
+           return "badge-info";
+            break;
+        case 'delivered':
+            return "badge-success";
+            break;
+        default:
+            break;
+    }
+    
 }

@@ -276,6 +276,10 @@ Route::prefix('superuser')->name('superuser.')->group(function(){
 
         Route::controller(SuperuserOrderController::class)->group(function(){
             Route::get('/super-orders', 'orderPage')->name('super.orders');
+            Route::get('/super-order-details/{orderId}', 'orderItems')->name('super.order.items');
+            Route::post('/super-update-order-status', 'updateOrderStatus')->name('super.update.order.status');
+            Route::post('/super-get-order-status', 'getOrderStatus')->name('super.get.order.status');
+            Route::post('/super-delete-order', 'deleteOrder')->name('super.delete.order');
         });
         
 

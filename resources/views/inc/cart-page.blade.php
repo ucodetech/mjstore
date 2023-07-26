@@ -42,21 +42,14 @@
                     </div>
                 </div>
                 <div class="price_btns">
-                    <h6 class="price">{{ Naira($item->price) }}  <br><span class="text-danger pt-5"><strike>{{ Naira($item->model->price) }}</strike></span>
+                    <h6 class="price">{{ currency_converter($item->price) }}  <br><span class="text-danger pt-5"><strike>{{ currency_converter($item->model->price) }}</strike></span>
                     <small class="text-italic" style="color: orangered"> 
                         <i>
                         -{{ N2P($item->model->product_discount) }}
                         </i>
                     </small>
                     </h6>
-                        <style>
-                            .input-number{
-                                margin: 0 4px;
-                                width: 50px !important;
-                                border: 0;
-
-                            }
-                        </style>
+                       
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-outline-danger btn-number p-0 DecQty" 
@@ -99,7 +92,7 @@
             @php
                 $tot = $item->qty*$item->price ;
             @endphp
-            Total: {{ $item->qty }} x {{ Naira($item->price) }} = {{ Naira($tot)}}
+            Total: {{ $item->qty }} x {{ currency_converter($item->price) }} = {{ currency_converter($tot)}}
         </span>
         <hr>
     @endforeach
@@ -123,13 +116,13 @@
                                     Subtotal        
                             </th>        
                             <td class="text-info">
-                                    {{ NairaSign().$cart->subtotal() }}
+                                    {{ CurrencySign().$cart->subtotal() }}
                             </td>
                         </tr>  
                         <tr>
                             @if (session()->has('coupon'))
                                 <td>Saved:</td>
-                                <td>{{ Naira(session('coupon')['value']) }}</td>
+                                <td>{{ currency_converter(session('coupon')['value']) }}</td>
                             @endif
                             {{-- <td>Shipping</td>
                             <td>$10.00</td> --}}
@@ -145,16 +138,16 @@
                                 @php
                                     $totalpay = removeComma($cart->subtotal()) - session('coupon')['value'];
                                 @endphp
-                                   <td> {{ Naira($totalpay) }}</td>
+                                   <td> {{ currency_converter($totalpay) }}</td>
                             @else
-                                 <td> {{ NairaSign().$cart->subtotal() }}</td>
+                                 <td> {{ CurrencySign().$cart->subtotal() }}</td>
                                   
                          @endif
                            
                         </tr>      
                     </table>
                 <hr>
-                <a href="{{ route('shop.billing.checkout') }}" class="btn btn-info btn-block">Checkout ({{session()->has('coupon') ?removeComma($cart->subtotal()) - session('coupon')['value'] : NairaSign().$cart->subtotal() }})</a>   
+                <a href="{{ route('shop.billing.checkout') }}" class="btn btn-info btn-block">Checkout ({{session()->has('coupon') ?removeComma($cart->subtotal()) - session('coupon')['value'] : CurrencySign().$cart->subtotal() }})</a>   
                 </div>
             </div>
             <div class="card mt-5">

@@ -102,8 +102,8 @@
                                 </ul>
                                 <div class="product-content">
                                     <h3 class="title"><a href="{{ route('product.details', $product->slug) }}">{{ $product->title  }}</a></h3>
-                                    <div class="price text-success">{{ Naira($product->sales_price) }}
-                                        <span class="text-danger">{{ Naira($product->price) }}</span>
+                                    <div class="price text-success">{{ currency_converter($product->sales_price) }}
+                                        <span class="text-danger text-strike">{{ ($product->product_discount == 0.00) ? " ": currency_converter($product->price) }}</span>
                                     </div>
                                     <a style="cursor:pointer"
                                     data-quantity="1"

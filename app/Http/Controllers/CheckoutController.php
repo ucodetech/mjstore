@@ -32,19 +32,19 @@ class CheckoutController extends Controller
                 <tbody>
                     <tr>
                         <td>Sub Total</td>
-                        <td>'.NairaSign().Cart::subtotal().'</td>
+                        <td>'.currency_converter(Cart::subtotal()).'</td>
                     </tr>
                     <tr>';
                     if (session()->has('coupon')){
                         $output .='<td>Saved:</td>
-                         <td>'.Naira(session("coupon")["value"]).'</td>';
+                         <td>'.currency_converter(session("coupon")["value"]).'</td>';
                      }
                     $output.='</tr>
                     <tr>';
                     if($is_user_entered){
                         if($is_user_entered->delivery_charge != 0){
                             $output.='<td>Delivery Fee</td>
-                            <td>'.$is_user_entered->delivery_charge.'</td>';
+                            <td>'.currency_converter($is_user_entered->delivery_charge).'</td>';
                         }
                     }
                     $output .='</tr>
@@ -57,16 +57,16 @@ class CheckoutController extends Controller
                                     $totalpay = $totalpay + $is_user_entered->delivery_charge;
                                     
                                 }
-                                    $output.='<td class="text-primary">'.Naira($totalpay).'</td>';
+                                    $output.='<td class="text-primary">'.currency_converter($totalpay).'</td>';
                         }else{
                             
                             if($is_user_entered){
                                 $totPay = removeComma($cart->subtotal()) + $is_user_entered->delivery_charge;
-                                $output.='<td class="text-primary">'.Naira($totPay).'</td>';
+                                $output.='<td class="text-primary">'.currency_converter($totPay).'</td>';
                                 
                             }else{  
                                 $totPay = $cart->subtotal();
-                                $output.='<td class="text-primary">'.NairaSign().$totPay.'</td>';
+                                $output.='<td class="text-primary">'.currency_converter($totPay).'</td>';
                             }
                               
                     }
@@ -229,19 +229,19 @@ class CheckoutController extends Controller
                     <tbody>
                         <tr>
                             <td>Sub Total</td>
-                            <td>'.NairaSign().Cart::subtotal().'</td>
+                            <td>'.currency_converter(Cart::subtotal()).'</td>
                         </tr>
                         <tr>';
                         if (session()->has('coupon')){
                             $output .='<td>Saved:</td>
-                            <td>'.Naira(session("coupon")["value"]).'</td>';
+                            <td>'.currency_converter(session("coupon")["value"]).'</td>';
                         }
                         $output.='</tr>
                         <tr>';
                         if($is_user_entered){
                             if($is_user_entered->delivery_charge != 0){
                                 $output.='<td>Delivery Fee</td>
-                                <td>'.$is_user_entered->delivery_charge.'</td>';
+                                <td>'.currency_converter($is_user_entered->delivery_charge).'</td>';
                             }
                         }
                         $output .='</tr>
@@ -254,16 +254,16 @@ class CheckoutController extends Controller
                                     $totalpay = $totalpay + $is_user_entered->delivery_charge;
                                     
                                 }
-                                    $output.='<td class="text-primary">'.Naira($totalpay).'</td>';
+                                    $output.='<td class="text-primary">'.currency_converter($totalpay).'</td>';
                         }else{
                             
                             if($is_user_entered){
                                 $totPay = removeComma($cart->subtotal()) + $is_user_entered->delivery_charge;
-                                $output.='<td class="text-primary">'.Naira($totPay).'</td>';
+                                $output.='<td class="text-primary">'.currency_converter($totPay).'</td>';
                                 
                             }else{  
                                 $totPay = $cart->subtotal();
-                                $output.='<td class="text-primary">'.NairaSign().$totPay.'</td>';
+                                $output.='<td class="text-primary">'.CurrencySign().$totPay.'</td>';
                             }
                               
                         }

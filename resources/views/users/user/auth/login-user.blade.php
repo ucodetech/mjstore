@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('frontcontent')
-@include('inc.bread-front')
+{{-- @include('inc.bread-front') --}}
 
      <!-- Login Area -->
-     <div class="bigshop_reg_log_area section_padding_100_50">
+     <div class="bigshop_reg_log_area section_padding_100_50 pt-3">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-6">
@@ -30,7 +30,7 @@
                         </form>
                         <!-- Forget Password -->
                         <div class="forget_pass mt-15">
-                            <a href="#">Forget Password?</a>
+                            <a href="{{ route('user.user.forgot.password') }}">Forget Password?</a>
                         </div>
                         <div class="forget_pass mt-15">
                            Don't have an account?  <a href="{{ route('user.user.register') }}"><i class="fa fa-user-plus"></i> Sign Up</a>

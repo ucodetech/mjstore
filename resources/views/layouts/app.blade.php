@@ -42,6 +42,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Oswald:wght@300;400&family=Passion+One&display=swap" rel="stylesheet">
+    @vite('resources/js/app.js')
     <style>
         *{
           /* font-family: 'Fredoka One', cursive; */
@@ -53,6 +54,11 @@
           font-family: 'Oswald', sans-serif; */
           font-family: 'Passion One', cursive;
         }
+        .bigshop-main-menu .tech-mod{
+            border-bottom: 3px solid rgba(3, 56, 56, 0.432) !important; border-bottom-left-radius:20px !important;
+            border-bottom-right-radius:20px !important;
+        }
+
       </style>
 </head>
 <body>
@@ -83,20 +89,11 @@
                 <div class="col-6">
                     <div class="language-currency-dropdown d-flex align-items-center justify-content-end">
                         <!-- Language Dropdown -->
-                        <div class="language-dropdown">
-                            <div class="dropdown">
-                                <a class="btn btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenu1"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    English
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                                    <a class="dropdown-item" href="#">Bangla</a>
-                                    <a class="dropdown-item" href="#">Arabic</a>
-                                </div>
-                            </div>
-                        </div>
+                           <!-- Currency Dropdown -->
+                           @include('inc.currency_header')
 
-                        <!-- Currency Dropdown -->
+                     
+                        <!-- Select Dropdown -->
                         <div class="currency-dropdown">
                             <div class="dropdown">
                                 <a class="btn btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenu2"
@@ -119,7 +116,7 @@
     </div>
     <!-- Main Menu -->
     <div class="bigshop-main-menu">
-        <div class="container">
+        <div class="container tech-mod">
             <div class="classy-nav-container breakpoint-off">
                 <nav class="classy-navbar" id="bigshopNav">
 
@@ -371,6 +368,7 @@
 <script src="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/summernote/summernote-bs4.min.js')}}"></script>
+<script src="{{ asset('shopjs/currency.js')}}"></script>
 
 @yield('frontscripts')
 

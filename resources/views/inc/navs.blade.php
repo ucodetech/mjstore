@@ -64,9 +64,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/examples/contact-us.html" class="nav-link">
-              <i class="fa fa-cart-plus nav-icon"></i>
-              <p>Shopping Carts</p>
+            <a href="{{ route('superuser.super.currency') }}" class="nav-link">
+              <i class="fa fa-money-bill-wave nav-icon"></i>
+              <p>Currency</p>
             </a>
           </li>
           <li class="nav-item">

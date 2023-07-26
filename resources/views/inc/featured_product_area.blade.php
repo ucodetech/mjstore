@@ -31,7 +31,9 @@
                                             <span>{{ $featured->brand->title }}</span> <br>
                                             <span>{{ Str::length($featured->title) > 20 ? wrap20($featured->title): $featured->title }}</span>
                                         </span>
-                                        <span class="product-price" style="font-size:13px">{{ Naira($featured->sales_price) }} <span class="text-danger" style="font-size:12px"><strike>{{ Naira($featured->price) }}</strike></span></span>
+                                        <span class="product-price" style="font-size:13px">{{ currency_converter($featured->sales_price) }} <span class="text-danger" style="font-size:12px">
+                                            <strike>{{ ($featured->product_discount == 0.00) ? " ": currency_converter($featured->price) }}</strike>
+                                        </span></span>
                                     </div>
                                     
                                 @endforeach

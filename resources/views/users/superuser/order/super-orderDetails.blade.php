@@ -34,11 +34,11 @@
        
         <div class="card-body" id="orderItems{{$item->id }}" >
             <div class="row mb-4">
-                <div class="col-md-6">
-                    <h3 class="lead text-uppercase text-bold">Order Details</h3>
+                <div class="col-md-8">
+                    <h3 class="lead text-uppercase text-bold">Order Details: Date Ordered: {{ pretty_dates($item->created_at) }}</h3>
                 </div>
-                <div class="col-md-6 text-end">
-                    <a href="{{ route('superuser.super.orders') }}" class="btn btn-tool btn-outline-info btn-sm">
+                <div class="col-md-4 text-right">
+                    <a href="{{ route('superuser.super.orders') }}" class="btn  btn-outline-info btn-sm">
                         Back to Order
                     </a>
                 </div>
@@ -80,6 +80,15 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="card rounded-end shadow" style="background-color: #060913c0">
+                        <div class="card-body p-3">
+                            <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+                                 <span class="text-capitalize">
+                                   Payment Method:  {{ $item->payment_method }}  
+                                 </span>
+                            </div>
+                          </div>
                     </div>
                     <div class="card rounded-end shadow" style="background-color: #060913c0">
                         <div class="card-body p-3">

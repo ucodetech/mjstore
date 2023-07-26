@@ -83,7 +83,7 @@
 
                                         <p class="brand_name">{{ $product->brand->title }}</p>
                                         <a href="{{ route('product.details', $product->slug) }}">{{ $product->title }}</a>
-                                        <h6 class="product-price">{{ Naira($product->sales_price) }} <span class="text-danger">{{ Naira($product->price) }}</span></h6>
+                                        <h6 class="product-price">{{ currency_converter($product->sales_price) }} <span class="text-danger">{{ currency_converter($product->price) }}</span></h6>
 
                                         <p class="product-short-desc">{{ removeTag($product->summary) }}</p>
                                     </div>

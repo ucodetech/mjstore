@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UsersTableSeeder::class);
         $this->call(SuperuserSeeder::class);
+        $this->call(CurrencySeeder::class);
+
         \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

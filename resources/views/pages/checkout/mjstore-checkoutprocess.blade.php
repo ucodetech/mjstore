@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('frontcontent')
-@include('inc.bread-user')
+{{-- @include('inc.bread-user') --}}
   @php
           $cart = \Gloudemans\Shoppingcart\Facades\Cart::instance('shopping');
 
   @endphp
     <!-- Checkout Area -->
-    <div class="checkout_area section_padding_100" id="checkaddress_render">
+    <div class="checkout_area section_padding_100 pt-3" id="checkaddress_render">
         <div class="container">
             <div class="row">
                <div class="col-lg-8">
@@ -92,7 +92,7 @@
                                                     <label class="custom-control-label" for="shipping_method{{ $shipping->id }}">{{ $shipping->shipping_method }}</label>
                                                 </div>
                                                 @php
-                                                $fee = Naira($shipping->delivery_charge);
+                                                $fee = currency_converter($shipping->delivery_charge);
                                                 @endphp
                                                 <small class="text-muted ml-3">{{ $shipping->delivery_time }} 
                                                     <span class="text-primary">{{ ($shipping->delivery_charge != 0 )? $fee:' Free Delivery' }}</span>
@@ -185,7 +185,7 @@
                                         {{ $item->name }}
                                     </small> <br>
                                     <small class="price text-primary">
-                                        {{ Naira($item->price) }}
+                                        {{ currency_converter($item->price) }}
                                     </small><br>
                                     <small>
                                         Qty: {{ $item->qty }}

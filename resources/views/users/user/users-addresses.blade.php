@@ -1,14 +1,14 @@
 @extends('layouts.usersapp')
 
 @section('frontcontent')
-@include('inc.bread-user')
+{{-- @include('inc.bread-user') --}}
 @if (Auth::check())
      @php
          $customer = auth()->user();
      @endphp
 @endif
    <!-- My Account Area -->
-   <section class="my-account-area section_padding_100_50">
+   <section class="my-account-area section_padding_100_50 pt-3">
     <div class="container">
         <div class="row">
             @include('inc.customerdashboard')

@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('frontcontent')
-@include('inc.bread-front')
+{{-- @include('inc.bread-front') --}}
 
      <!-- Login Area -->
-     <div class="bigshop_reg_log_area section_padding_100_50">
+     <div class="bigshop_reg_log_area section_padding_100_50 pt-3">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="login_form mb-50">
-                        <img src="https://media.istockphoto.com/id/497347644/photo/hand-pressing-register-now.jpg?s=612x612&w=0&k=20&c=XzXNw7_71cx23yPATWsSnYwGytZW-KU3eTpy3WCFQgw=" alt="">
+                        <img src="https://img.freepik.com/premium-vector/register-now-icon-flat-style-registration-vector-illustration-isolated-background-member-notification-sign-business-concept_157943-757.jpg?size=626&ext=jpg&ga=GA1.1.1320766059.1690405573&semt=ais" alt="">
                     </div>
                 </div>
                

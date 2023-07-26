@@ -69,7 +69,18 @@
                                     </td> --}}
                                     <td>{{ $order->quantity }}</td>
                                     {{-- <td>{{ $order->payment_method }}</td> --}}
-                                    <td><span class="badge badge-btn {{ $order->payment_status == 0 ? 'badge-danger' : 'badge-success' }}">{{ (($order->payment_status == 0)?  'Not Paid':  'Paid') }}</span></td>
+                                    <td>
+                                     
+                                        @if ($order->payment_method == "cash on delivery" && $order->payment_status != 1)
+                                            <span class="badge badge-btn badge-warning">Cash On Delivery</span>
+                                        @else
+                                        <span class="badge badge-btn {{ $order->payment_status == 0 ? 'badge-danger' : 'badge-success' }}">
+                                         {{ (($order->payment_status == 0)?  'Not Paid':  'Paid') }}
+                                        </span>
+                                        @endif
+                                      
+                                   
+                                  </td>
                                     <td>
                                       <span class="badge badge-btn {{ formattedOrderStatus($order->order_status) }}">
                                         {{ Str::ucfirst($order->order_status) }}
@@ -77,9 +88,14 @@
                                     </td>
                                     
                                    <td>
+                                   <div class="btn-group">
                                     <a href="{{ route('superuser.super.order.items', $order->order_number ) }}" class="btn btn-outline-info btn-sm"><i class="fa fa-eye"></i></a> &nbsp;
                                     
-                                    <button data-id="{{ $order->id }}" data-url="{{ route('superuser.super.delete.order') }}" id="deleteOrderBtn" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                    @if ($order->order_status == "pending")
+                                      <button data-id="{{ $order->id }}" data-url="{{ route('superuser.super.delete.order') }}" id="deleteOrderBtn" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                    @endif
+                                    
+                                   </div>
                                    </td>
                                   
                                   
@@ -161,7 +177,48 @@
     })
 
     $('body').on('click', '#deleteOrderBtn', function(e){
-        
+        let url = $(this).data('url');
+        let order_id = $(this).data('id');
+       
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this action!",
+          icon : 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if(result.isConfirmed){
+            $.ajax({
+              url: url,
+              method: "post",
+              dataType: 'json',
+              data: {
+                order_id:order_id,
+                header: {
+                  token: "{{ csrf_token() }}"
+                }
+              },
+              success:function(data){
+                if(data.code == 0){
+                  toastr.error(data.error)
+                }else if(data.code == 1){
+                  Swal.fire(
+                  'Deleted!',
+                   data.msg,
+                  'success'
+                )
+                setTimeout(() => {
+                  location.reload();
+                }, 2000);
+                }else{
+                  toastr.info(data.msg)
+                }
+              }
+            })
+          }
+        })
     })
     
     })

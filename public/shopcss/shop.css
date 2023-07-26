@@ -311,6 +311,13 @@ button:focus, button:active {
     border-radius: 50%;
     padding: 15px;
 }
+
+.input-number{
+    margin: 0 4px;
+    width: 50px !important;
+    border: 0;
+
+}
                       
 /* ol .carousel-indicators li:active {
     background-color: rgb(221, 11, 11);

@@ -55,6 +55,7 @@ class WishlistController extends Controller
                     foreach($wishlists as $item){
                         $pro = Product::find($item->product_id);
                         $photo = explode(',',$pro->photo);
+                        $price =  $pro->product_discount == 0 ? "": currency_converter($pro->price);
                         $output .= '
                         <input type="hidden" name="wishlist_id" id="wishlist_id" value="'.$item->id.'">
                         <div class="col-md-12 shadow p-4 mb-3 rounded-end">
@@ -65,8 +66,8 @@ class WishlistController extends Controller
                                     <hr class="invisible">
                                     <a href="'.url("/product-details/". $pro->slug).'"><span>'.$pro->title .'</span></a><br>  
                                     <small class="text-muted"><i>400+ orders</i></small><br> 
-                                    <span class="text-success">'.Naira( $pro->sales_price).' <small class="text-danger"><strike>'.Naira( $pro->price).'</strike></small></span> <br> 
-                                    <small class="text-danger">discount: '.Naira($pro->product_discount) .' =>>>> '.  N2P($pro->product_discount) .'</small> 
+                                    <span class="text-success">'.currency_converter( $pro->sales_price).' <small class="text-danger"><strike>'.$price.'</strike></small></span> <br> 
+                                    <small class="text-danger">discount: '.currency_converter($pro->product_discount) .' =>>>> '.  N2P($pro->product_discount) .'</small> 
                                 </section>
                             </div>
                             <div class="actions">

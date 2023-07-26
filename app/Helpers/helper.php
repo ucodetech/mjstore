@@ -167,6 +167,18 @@ function timeAgo($time){
     }
 
 }
+// is date a month
+function IsOneMonth($date){
+    date_default_timezone_set('Africa/Lagos');
+    $dated = new Carbon\Carbon($date);
+    if($dated->diffInMonths() < 1){
+        return true;
+    }
+    return false;
+    
+    
+   
+}
 function dateDiffInDays($date1, $date2)
 {
     // Calculating the difference in timestamps
@@ -253,7 +265,7 @@ function cal_percentage($num) {
     $count = number_format($count2, 0);
     return $count;
 }
-//inout to string
+//input to string
 function IN2String($str){
     return strval($str);
 }
@@ -304,4 +316,64 @@ function formattedOrderStatus($order_status){
             break;
     }
     
+}
+
+//load currency
+function currency_load(){
+    if(!session()->has('default_currency')){
+        session()->put('default_currency', App\Models\Currency::where('code', 'NGN')->first());
+    }
+}
+
+//currency sign 
+function CurrencySign(){
+    return currency_symbol();
+}
+
+//currency converter
+function currency_converter($price){
+    return format_price(convert_price($price));
+}
+
+//convert price
+if(!function_exists('convert_price')){
+    function convert_price($price){
+      
+        // if(session()->has('default_currency')){
+        //     session()->flush('default_currency');
+        // }
+        currency_load();
+        $default_currency = session('default_currency');
+        $price = floatval($price)/floatval($default_currency->exchange_rate);
+        
+        if(session()->has('currency_exchange_rate'))
+        $exchange = session('currency_exchange_rate');
+        else
+        $exchange = $default_currency->exchange_rate;
+
+        $price = floatval($price) * floatval($exchange);
+        return $price;
+
+    }
+}
+
+//currency symbol
+if(!function_exists('currency_symbol')){
+    function currency_symbol(){
+        currency_load();
+        if(session()->has('currency_symbol')){
+            $symbol = session('currency_symbol');
+        }else{
+            $default_currency = session('default_currency');
+            $symbol = $default_currency->symbol;
+        }
+        return $symbol;
+    }
+}
+
+//format currency
+if(!function_exists('format_price')){
+    function format_price($price){
+        return currency_symbol() .  number_format($price, 2);
+    }
 }

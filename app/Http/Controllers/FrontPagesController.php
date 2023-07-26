@@ -189,6 +189,7 @@ class FrontPagesController extends Controller
     public function productQuickview(Request $request){
         $uniquekey = $request->uniquekey;
         $product = Product::where('unique_key', $uniquekey)->first();
+        $price = $product->product_discount == 0 ? " " :  currency_converter($product->price);
         $output = '';
         $output = '
         <div class="quickview_body">
@@ -228,7 +229,7 @@ class FrontPagesController extends Controller
                             <i class="fa fa-star" aria-hidden="true"></i>
                             <i class="fa fa-star" aria-hidden="true"></i>
                         </div>
-                        <h5 class="price">'.Naira($product->sales_price).' <span class="text-danger">'.Naira($product->price).'</span></h5>
+                        <h5 class="price">'.currency_converter($product->sales_price).' <span class="text-danger">'.$price.'</span></h5>
                         <p>'.$product->summary.'</p>
                         <a href="'.route('product.details', $product->slug).'">View Full Product Details</a>
                     </div>

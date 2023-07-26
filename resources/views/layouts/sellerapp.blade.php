@@ -45,6 +45,7 @@
   <!-- add to document <head> -->
 <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
     rel="stylesheet"/>
+    @vite('resources/js/app.js')
 
 </head>
 <style>

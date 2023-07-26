@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('frontcontent')
-@include('inc.bread-front')
+{{-- @include('inc.bread-front') --}}
 
      <!-- Login Area -->
-     <div class="bigshop_reg_log_area section_padding_100_50">
+     <div class="bigshop_reg_log_area section_padding_100_50 pt-3">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-6">

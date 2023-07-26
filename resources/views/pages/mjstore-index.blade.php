@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('frontcontent')
-    
         @include('inc.welcome_area')
         @include('inc.top_catagory_area')
         @include('inc.quickviewModal')

@@ -48,6 +48,7 @@ class PagesController extends Controller
         return view('users.superuser.auth.super-profile', ['super'=>$super]);
     }
 
+ 
 
     public function deleteTempFile(Request $request){
          //delete Temporary files 

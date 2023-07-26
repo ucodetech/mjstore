@@ -39,12 +39,12 @@
             <ul>
                 <li>
                     <span>Sub Total:</span>
-                    <span>{{NairaSign().$cart->subtotal() }}</span>
+                    <span>{{CurrencySign().$cart->subtotal() }}</span>
                 </li>
                 @if (session()->has('coupon'))
                     <li>
                         <span>Saved:</span>
-                        <span>{{ Naira(session('coupon')['value']) }}</span>
+                        <span>{{ currency_converter(session('coupon')['value']) }}</span>
                     </li>
                 @endif
                 <li>
@@ -54,9 +54,9 @@
                                 @php
                                     $totalpay = removeComma($cart->subtotal()) - session('coupon')['value'];
                                 @endphp
-                                    {{ Naira($totalpay) }}
+                                    {{ currency_converter($totalpay) }}
                             @else
-                                  {{ NairaSign().$cart->subtotal() }}
+                                  {{ CurrencySign().$cart->subtotal() }}
                         @endif
                     </span>
                 </li>

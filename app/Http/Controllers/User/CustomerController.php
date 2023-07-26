@@ -20,7 +20,9 @@ use App\Models\OrderItems;
 class CustomerController extends Controller
 {
    
-
+public function userForgotPassword(){
+    return view('users.user.auth.forgot-password');
+}
     public function userRegisterProcess(Request $request){
         $validator = Validator::make($request->all(), [
                 'fullname' => 'required|min:3',

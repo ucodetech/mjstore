@@ -17,6 +17,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Superuser\CouponController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Superuser\SuperCurrencyController;
 use App\Http\Controllers\Superuser\ShippingMethodController;
 use App\Http\Controllers\Superuser\SuperuserOrderController;
 
@@ -35,6 +36,14 @@ use App\Http\Controllers\Superuser\SuperuserOrderController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+
+Route::controller(SuperCurrencyController::class)->group(function () {
+    Route::get('/currency_load', 'LoadCurrency')->name('shop.load.currency');
+
+    // Route::post('/orders', 'store');
+});
+
 
 Route::controller(FrontPagesController::class)->group(function () {
     Route::get('/', 'Index')->name('home');
@@ -282,6 +291,13 @@ Route::prefix('superuser')->name('superuser.')->group(function(){
             Route::post('/super-delete-order', 'deleteOrder')->name('super.delete.order');
         });
         
+        Route::controller(SuperCurrencyController::class)->group(function(){
+            Route::get('/super-currencies', 'CurrencyPage')->name('super.currency');
+            Route::post('/super-update-currency-status', 'updateCurrenyStatus')->name('super.update.currency.status');
+            Route::post('/super-add-currency', 'addCurrency')->name('super.add.currency');
+            Route::get('/super-list-currency', 'listCurrency')->name('super.list.currency');
+            Route::post('/super-delete-currency', 'deleteCurrency')->name('super.delete.currency');
+        });
 
     });
 
@@ -305,6 +321,7 @@ Route::prefix('user')->name('user.')->group(function(){
             Route::get('/success-user', 'userRegisterSuccess')->name('user.register.success.page');
             Route::get('/user-email-verify', 'VerifyEmail')->name('customer.email.verify');
             Route::get('/user-invalid-token', 'invalidToken')->name('user.invalidtoken');
+            Route::get('/forgot-password', 'userForgotPassword')->name('user.forgot.password');
 
         });
     });

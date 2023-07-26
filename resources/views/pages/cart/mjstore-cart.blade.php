@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('frontcontent')
-@include('inc.bread-user')
+{{-- @include('inc.bread-user') --}}
 @php
     $cart = \Gloudemans\Shoppingcart\Facades\Cart::instance('shopping');
     
 @endphp
  <!-- Cart Area -->
-  <div class="cart_area section_padding_100_70 clearfix" id="cart_page_render">
+  <div class="cart_area section_padding_100_70 pt-3 clearfix" id="cart_page_render">
     @include('inc.cart-page')
 </div>
 <!-- Cart Area End -->

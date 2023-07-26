@@ -98,7 +98,8 @@
 
                                     <p class="brand_name">{{ $cat_pro->brand->title }}</p>
                                     <a href="#">{{ $cat_pro->title }}</a>
-                                    <h6 class="product-price">{{ Naira($cat_pro->sales_price) }} <span class="text-strike text-danger">{{ Naira($cat_pro->price) }}</span></h6>
+                                    <h6 class="product-price">{{ currency_converter($cat_pro->sales_price) }} <span class="text-strike text-danger">{{ ($cat_pro->product_discount == 0.00) ? " ": currency_converter($cat_pro->price) }}</span></h6>
+                                  
                                 </div>
                             </div>
                         </div>

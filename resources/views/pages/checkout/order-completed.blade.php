@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('frontcontent')
-@include('inc.bread-user')
+{{-- @include('inc.bread-user') --}}
 
         
       <!-- Checkout Area -->
-      <div class="checkout_area section_padding_100">
+      <div class="checkout_area section_padding_100 pt-3">
         <div class="container">
             <div class="row">
                 <div class="col-12">

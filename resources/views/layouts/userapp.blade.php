@@ -42,6 +42,11 @@
     font-family: 'Oswald', sans-serif; */
     font-family: 'Passion One', cursive;
   }
+  .bigshop-main-menu .tech-mod{
+    border-bottom: 3px solid rgba(3, 56, 56, 0.432) !important; border-bottom-left-radius:20px !important;
+    border-bottom-right-radius:20px !important;
+}
+
 </style>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">

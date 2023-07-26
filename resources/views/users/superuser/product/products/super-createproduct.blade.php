@@ -54,14 +54,14 @@
                             <label for="product_price">Product Price: 
                                 <sup class="text-danger"></sup></label>
                                 <input type="number" name="product_price" 
-                                id="product_price" class="form-control" value="{{ old('product_price') }}">
+                                id="product_price" class="form-control" value="{{ old('product_price') }}" step=".01">
                         </div>
                        
                         <div class="form-group col-md-4">
                             <label for="product_discount">Product Discount: 
                                 <sup class="text-danger"></sup></label>
                                 <input type="number" name="product_discount" 
-                                id="product_discount" class="form-control"   value="{{ old('product_discount') }}">
+                                id="product_discount" class="form-control"   value="{{ old('product_discount') }}" step=".01">
                         </div>
                         <div class="form-group col-md-4">
                             <label>Size</label>

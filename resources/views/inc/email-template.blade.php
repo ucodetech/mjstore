@@ -33,7 +33,7 @@
                 <a href="{{ $actionLink }}" style="background:goldenrod; 
                 color:#fff;border-radius: 20px;
                  width:auto; height:30px;
-                  padding:10px; text-decoration:none;font-weight:bold;">Verify Email</a>
+                  padding:10px; text-decoration:none;font-weight:bold;">{{ ($actionLinkText ? $actionLinkText : "Verify Email") }}</a>
                 </center>
                 &nbsp;
                 <hr>
@@ -43,7 +43,7 @@
                 <div href="width:auto;overflow:scroll">
                     <a href="{{ $actionLink }}" >{{ $actionLink }} </a>
                 </div>
-               device-verification
+               Email Verification
             </div>
         </div> 
 

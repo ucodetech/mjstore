@@ -11,7 +11,8 @@
         $title = ucfirst($title[1]);
     @endphp
   <title> {{ config('app.name') }} | {{ $title }}</title>
-
+    <!-- Favicon  -->
+    <link rel="icon" href="{{ (getSettings() != null ? asset('storage/uploads/settings/'.getSettings()->favicon) : asset('assets_front/img/core-img/favicon.ico')) }}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
@@ -42,6 +43,7 @@
   <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
 
   <link href="{{ asset('file_pond/dist/filepond.css')}}" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ asset('shopcss/shop.css') }}">
   <!-- add to document <head> -->
 <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
     rel="stylesheet"/>
@@ -281,6 +283,8 @@
 <script src="{{ asset('assets_back/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/jq-multifield/jquery.multifield.js')}}"></script>
+
 
 <script src="{{ asset('assets_back/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>

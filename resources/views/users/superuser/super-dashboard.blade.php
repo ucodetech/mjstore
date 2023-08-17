@@ -869,7 +869,23 @@
               }
             })
         }
-
+        deleteTempOrder();
+        function deleteTempOrder(){
+            let url = $('#temp_url').val();
+            let token = "{{ csrf_token() }}";
+            // alert(url);
+            $.ajax({
+              url:url,
+              method:'POST',
+              data: {
+                deleteTempFiles:'deleteTempOrder',
+                _token:token
+              },
+              success:function(data){
+                toastr.info(data)
+              }
+            })
+        }
 
       })
 

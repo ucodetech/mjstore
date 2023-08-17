@@ -11,7 +11,8 @@
         $title = ucfirst($title[0]);
     @endphp
   <title> {{ config('app.name') }} | {{ $title }}</title>
-
+  <!-- Favicon  -->
+  <link rel="icon" href="{{ (getSettings() != null ? asset('storage/uploads/settings/'.getSettings()->favicon) : asset('assets_front/img/core-img/favicon.ico')) }}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
@@ -40,6 +41,9 @@
   <!-- add to document <head> -->
   <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
     rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('shopcss/shop.css') }}">
+    @vite('resources/js/app.js')
+
 </head>
 <style>
   *{
@@ -292,6 +296,8 @@
 <script src="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/summernote/summernote-bs4.min.js')}}"></script>
+<script src="{{ asset('assets_back/plugins/jq-multifield/jquery.multifield.js')}}"></script>
+
 
 {{-- filepond --}}
 {{-- <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script> --}}

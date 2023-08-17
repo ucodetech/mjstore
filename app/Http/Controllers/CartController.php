@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AppliedCoupon;
+use App\Models\ProductAttribute;
 use App\Models\Wishlist;
 
  
@@ -23,11 +24,22 @@ class CartController extends Controller
         }
         
         if($request->product_stock2){
-          $product_stock = $request->product_stock2;
+          $product_stock = $request->product_stock2; // total stock of the product in the database
         }else{
-           $product_stock = $request->product_stock;
+           $product_stock = $request->product_stock; 
         }
         $product_id = $request->product_id;
+        $msg = "";
+        //check if product has attributes
+        $pro_attr = ProductAttribute::where('product_id', $product_id)->first();
+
+        if($pro_attr){
+          if($request->attribute_size == ""){
+             $msg = 'Please select product size before adding to cart!';
+              return response()->json(['status'=>false, 'message'=>$msg]);
+          }
+
+        }
       
           // if requested quantity is greater than  product stock return false, product is out of stock 
           if($product_quantity > $product_stock){
@@ -45,6 +57,31 @@ class CartController extends Controller
         //let $product be used as $p
         $p =  $product[0]; 
         $price = $p['sales_price'];
+        //check if product has color 
+        // if(Product::where('id', $product_id)->first()->color != null){
+        //   if($request->color == ""){
+        //     $msg = 'Please select product color before adding to cart!';
+        //      return response()->json(['status'=>false, 'message'=>$msg]);
+        //   }
+             
+        // }
+        //check attribute requests
+        if($request->attr_sales_price){
+          $price = $request->attr_sales_price;
+        }else{
+          $price = $price;
+        }
+        if($request->color){
+          $color = $request->color;
+        }else{
+          $color = "";
+        }
+        if($request->attribute_size){
+          $attribute_size = $request->attribute_size;
+        }else{
+          $attribute_size = "";
+        }
+        //end check
        //make a cart array
        $cart_array=[];
         // let cart instance = Cart::instance()
@@ -53,8 +90,8 @@ class CartController extends Controller
             $cart_array[] = $item->id;
        }
       //  Cart::add('293ad', 'Product 1', 1, 9.99);
-      // id, name, quantity, price of the product
-       $result = $cart_instance->add($product_id, $p['title'], $product_quantity, $price)->associate(Product::class);
+      // id, name, quantity, price of the product,size if exist, color if exist
+       $result = $cart_instance->add($product_id, $p['title'], $product_quantity, $price, ['size'=>$attribute_size,'color'=> $color])->associate(Product::class);
       //  To store your cart instance into the database, you have to call the store($identifier)  method. Where $identifier is a random key, for instance the id or username of the user.
 
       // Cart::store('username');

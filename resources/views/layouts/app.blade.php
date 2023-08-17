@@ -1,9 +1,13 @@
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{ (getSettings() !=null) ? getSettings()->meta_description : "#" }}">
+    <meta name="keywords" content="{{ (getSettings() !=null) ? getSettings()->meta_keywords : "#" }}">
+    <meta name="author" content="Ejekwu Graveth Uzoma">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,11 +17,11 @@
         $title = explode('-', $title);
         $title = ucfirst($title[0]);
     @endphp
-    <title>{{ config('app.name', 'Laravel') }}| {{ (($title == 'Index.php')? 'Index':((is_numeric($title))? 'Product': $title)) }}</title>
+    <title>{{ config('app.name', 'Store') }}| {{ (($title == 'Index.php')? 'Shop':((is_numeric($title))? 'Product': $title)) }}</title>
     
 
     <!-- Favicon  -->
-    <link rel="icon" href="{{ asset('assets_front/img/core-img/favicon.ico')}}">
+    <link rel="icon" href="{{ (getSettings() != null ? asset('storage/uploads/settings/'.getSettings()->favicon) : asset('assets_front/img/core-img/favicon.ico')) }}">
 
     <link rel="stylesheet" href="{{ asset('assets_front/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets_front/css/classy-nav.min.css')}}">
@@ -72,6 +76,7 @@
     $cart = \Gloudemans\Shoppingcart\Facades\Cart::instance('shopping');
    
 @endphp
+
   <!-- Header Area -->
   <header class="header_area">
     <!-- Top Header Area -->
@@ -81,9 +86,9 @@
                 <div class="col-6">
                     <div class="welcome-note">
                         <span class="popover--text" data-toggle="popover"
-                            data-content="Welcome to Mummy Joy Store."><i
+                            data-content="Welcome to {{ (getSettings() != null ? getSettings()->site_title: "Store") }}"><i
                                 class="icofont-info-square"></i></span>
-                        <span class="text">Welcome to Mummy Joy Store.</span>
+                        <span class="text">Welcome to {{ (getSettings() != null ? getSettings()->site_title: "Store") }}</span>
                     </div>
                 </div>
                 <div class="col-6">
@@ -101,8 +106,14 @@
                                     Seller Account
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-                                    <a class="dropdown-item" href="#"> <i class="fa fa-user-plus"></i> Create Account</a>
-                                    <a class="dropdown-item" href="#"> <i class="fa fa-sign-in-alt"></i> Login</a>
+                                    @if (Auth::guard('seller')->check())
+                                        <a class="dropdown-item" href="{{ route('seller.vendor.dashboard') }}"> <i class="fa fa-dashboard"></i>Dashboard</a>
+                                       
+                                    @else
+                                        <a class="dropdown-item" href="{{ route('seller.vendor.register') }}"> <i class="fa fa-user-plus"></i> Create Account</a>
+                                        <a class="dropdown-item" href="{{ route('seller.vendor.login') }}"> <i class="fa fa-sign-in-alt"></i> Login</a>
+                                    @endif
+                                   
                                 </div>
                             </div>
                         </div>
@@ -121,7 +132,7 @@
                 <nav class="classy-navbar" id="bigshopNav">
 
                     <!-- Nav Brand -->
-                    <a href="{{ route('home') }}" class="nav-brand"><img src="{{ asset('assets_front/img/core-img/logo.png')}}" alt="logo"></a>
+                    <a href="{{ route('home') }}" class="nav-brand"><img src="{{  getSettings() != null ? asset('storage/uploads/settings/'. getSettings()->site_logo): asset('assets_front/img/core-img/logo.png')  }}" alt="logo"></a>
 
                     <!-- Toggler -->
                     <div class="classy-navbar-toggler">
@@ -170,10 +181,22 @@
                         <div class="search-area">
                             <div class="search-btn"><i class="icofont-search"></i></div>
                             <!-- Form -->
-                            <div class="search-form">
-                                <input type="search" class="form-control" placeholder="Search">
-                                <input type="submit" class="d-none" value="Send">
-                            </div>
+                            <form action="" method="GET">
+                                @csrf
+                                @method("GET")
+                                <div class="search-form">
+                                    <div class="d-inline-flex p-0">
+                                        <input type="search" name="search_product" id="search_product" data-url="{{ route('auto.search') }}" class="form-control" placeholder="Search product by title">
+                                        <button type="submit" class="btn  btn-white p-0 rounded-1 h-auto w-25"> <i class="fa fa-search"></i>  </button>
+
+                                    </div>
+                                    <div class="card bg-white border-0 rounded-0 d-flex-block w-100" style="font-size: 13px;" id="showResults">
+                                    
+                                       
+                                    </div>
+                                </div>
+                            
+                            </form>
                         </div>
 
                         <!-- Wishlist -->
@@ -214,6 +237,7 @@
     </div>
 </header>
 <!-- Header Area End -->
+   
     @yield('frontcontent')
  <!-- Footer Area -->
  <footer class="footer_area section_padding_100_0">
@@ -226,18 +250,25 @@
                         <h6>Contact Us</h6>
                     </div>
                     <ul class="footer_content">
-                        <li><span>Address:</span> Lords, London, UK - 1259</li>
-                        <li><span>Phone:</span> 002 63695 24624</li>
-                        <li><span>FAX:</span> 002 78965 369552</li>
-                        <li><span>Email:</span> support@example.com</li>
+                        <li><span>Address:</span> {{ (getSettings() !=null) ? getSettings()->address : "#" }}</li>
+                        <li><span>Phone:</span> 
+                            <a href="tel: {{ (getSettings() !=null) ? getSettings()->phone : "#" }}">
+                                 {{ (getSettings() !=null) ? getSettings()->phone : "#" }}
+                            </a>
+                        </li>
+                        <li><span>Email:</span> 
+                            <a href="mailto:{{ (getSettings() !=null) ? getSettings()->email : "#" }}">
+                                {{ (getSettings() !=null) ? getSettings()->email : "#" }}
+                            </a>
+                        </li>
                     </ul>
                     <div class="footer_social_area mt-15">
-                        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->facebook_url : "#" }}"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->twitter_url : "#" }}"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->linkedin_url : "#" }}"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->whatsapp_url : "#" }}"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->instagram_url : "#" }}"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->youtube_url : "#" }}"><i class="fab fa-youtube" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -327,8 +358,7 @@
                 <!-- Copywrite -->
                 <div class="col-12 col-md-6">
                     <div class="copywrite_text">
-                        <p>Made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="#">Designing
-                                World</a></p>
+                        <p>Made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="#">{{ (getSettings() !=null) ? getSettings()->made_with : "Designing word" }}</a></p>
                     </div>
                 </div>
                 <!-- Payment Method -->
@@ -369,6 +399,8 @@
 <script src="{{ asset('assets_back/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{ asset('assets_back/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <script src="{{ asset('shopjs/currency.js')}}"></script>
+<script src="{{ asset('shopjs/search.js')}}"></script>
+
 
 @yield('frontscripts')
 

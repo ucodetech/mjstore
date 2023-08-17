@@ -44,6 +44,12 @@
               <p>Users</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('superuser.super.seller.page') }}" class="nav-link">
+              <i class="fa fa-users nav-icon"></i>
+              <p>Sellers</p>
+            </a>
+          </li>
          
         </ul>
       </li>
@@ -207,7 +213,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="pages/examples/faq.html" class="nav-link">
+        <a href="{{ route('superuser.super.settings.index') }}" class="nav-link">
           <i class="fa fa-cog nav-icon"></i>
           <p>Settings</p>
         </a>

@@ -11,7 +11,8 @@
         $title = ucfirst($title[1]);
     @endphp
   <title> {{ config('app.name') }} | {{ $title }}</title>
-
+    <!-- Favicon  -->
+    <link rel="icon" href="{{ (getSettings() != null ? asset('storage/uploads/settings/'.getSettings()->favicon) : asset('assets_front/img/core-img/favicon.ico')) }}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
@@ -20,7 +21,7 @@
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('assets_back/dist/css/adminlte.min.css')}}">
-  <link rel="stylesheet" href="{{ asset('assets_backplugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets_back/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
 
   <link rel="stylesheet" href="{{ asset('assets_back/plugins/sweetalert2/sweetalert2.css')}}">
   {{-- <link rel="stylesheet" href="{{ asset('admin-assets_back/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}" --}}
@@ -32,6 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Oswald:wght@300;400&family=Passion+One&display=swap" rel="stylesheet">
+  @vite('resources/js/app.js')
 </head>
 <style>
   *{
@@ -45,7 +47,7 @@
     font-family: 'Passion One', cursive;
   } */
 </style>
-<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body class="hold-transition dark-mode">
  
 
   @yield('auth')
@@ -81,25 +83,14 @@
 <script src="{{ asset('assets_back/plugins/chart.js/Chart.min.js')}}"></script>
 
 <script>
-    //  var Toast = Swal.mixin({
-    //     toast: true,
-    //     position: 'top-end',
-    //     showConfirmButton: false,
-    //     timer: 3000
-    //   });
-      
-      toastr.options.preventDuplicates = true;
      
   $.ajaxSetup({
     headers:{
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   })
-  $(function(){
-    $('#summernote').summernote()
-  
-  })
-  </script>
 
+  </script>
+@yield('scripts')
 </body>
 </html>

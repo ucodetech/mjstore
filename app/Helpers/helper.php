@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Shipping;
-
 function hasPermission($permission){
     $permissions = auth()->user()->permission;
     $userPermissions = explode(',', $permissions);
@@ -11,7 +9,22 @@ function hasPermission($permission){
     return false;
 
 }
+function seller(){
+    if(auth()->guard('seller')->check()){
+        return auth()->guard('seller')->user();
+    }
+}
 
+function sellerBizInfo(){
+    if(auth()->guard('seller')->check()){
+        $seller =  auth()->guard('seller')->user();
+       return \App\Models\SellerBusinessInformation::where('seller_id', $seller->id)->get()->first();
+    }
+}
+
+function carbonNow(){
+    return \Illuminate\Support\Carbon::now();
+}
 // function isClient($user){
 //     $whoisuser =$user->whoIsUser;
 //     if($whoisuser == 1){
@@ -271,7 +284,8 @@ function IN2String($str){
 }
 
 function removeTag($string){
-    return strip_tags($string);
+    return nl2br(html_entity_decode($string));
+    
 }
 
 function Filter($value){
@@ -334,6 +348,10 @@ function CurrencySign(){
 function currency_converter($price){
     return format_price(convert_price($price));
 }
+//currency converter for cart subtotal
+function currency_converter_subtotal($price){
+    return currency_symbol(). convert_price($price);
+}
 
 //convert price
 if(!function_exists('convert_price')){
@@ -373,7 +391,64 @@ if(!function_exists('currency_symbol')){
 
 //format currency
 if(!function_exists('format_price')){
-    function format_price($price){
-        return currency_symbol() .  number_format($price, 2);
+    function format_price($price){ 
+        return currency_symbol().  number_format($price, 2);
     }
+}
+//get min price
+if(!function_exists('minPrice')){
+    function minPrice(){
+        return  floor(\App\Models\Product::min("sales_price"));
+    }
+}
+//get max price
+if(!function_exists('maxPrice')){
+    function maxPrice(){
+        return floor(\App\Models\Product::max("sales_price"));
+    }
+}
+
+//price range format
+if(!function_exists('priceRangeFormat')){
+    function priceRangeFormat($value){
+        return preg_match('([0-9]-[0-9])', $value);
+    }
+}
+
+//return product id
+function productID($uniquekey){
+    if($uniquekey){
+        return \App\Models\Product::where('unique_key', $uniquekey)->first()->id;
+       }else{
+        return false;
+       }
+}
+//return product id
+function productTitle($uniquekey){
+    if($uniquekey){
+        return \App\Models\Product::where('unique_key', $uniquekey)->first()->title;
+       }else{
+        return false;
+       }
+}
+
+//return product stock
+function productStock($uniquekey){
+    if($uniquekey){
+        return \App\Models\Product::where('unique_key', $uniquekey)->first()->stock;
+       }else{
+        return false;
+       }
+}
+
+function productSalesPrice($uniquekey){
+   if($uniquekey){
+    return \App\Models\Product::where('unique_key', $uniquekey)->first()->sales_price;
+   }else{
+    return false;
+   }
+}
+
+function getSettings(){
+    return \App\Models\Settings::where('id', 0)->first();
 }

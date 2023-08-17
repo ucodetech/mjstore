@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
+use App\Models\TemporaryCheckoutProcess;
+use App\Models\Seller;
 
 class PagesController extends Controller
 {
@@ -39,6 +41,11 @@ class PagesController extends Controller
         return view('users.superuser.customers.super-users', ['user_count'=>$user_count]);
     }
 
+    public function sellerPage(){
+        $seller_count = Seller::all()->count();
+        return view('users.superuser.sellers.super-sellers', ['seller_count'=>$seller_count]);
+    }
+
     public function superuserPage(){
         return view('users.superuser.auth.list-superusers');
     }
@@ -52,7 +59,7 @@ class PagesController extends Controller
 
     public function deleteTempFile(Request $request){
          //delete Temporary files 
-         if($request->deleteTempFiles == 'deleteTmpFiles')
+         if($request->deleteTempFiles == 'deleteTmpFiles'){
             $tmp_file = TemporaryFile::where('date_created', '<' ,Carbon::now())->get();
             if(count($tmp_file)>0){
                 foreach($tmp_file as $file){
@@ -74,5 +81,20 @@ class PagesController extends Controller
                 return 'Tmp files deleted for date: ' . pretty_dates(Carbon::now());
             }
             return 'No tmp file to delete for date: ' . pretty_dates(Carbon::now());
+        }
+        else if($request->deleteTempFiles == 'deleteTempOrder') {
+         
+            $tmp_order = TemporaryCheckoutProcess::where('created_at', '<', Carbon::today() )->get();
+            if(count($tmp_order) > 0)
+                foreach($tmp_order as $order){
+                    TemporaryCheckoutProcess::where('id', $order->id)->delete();
+                    return 'Tmp order deleted for date less than : ' . pretty_dates(Carbon::today());
+                }
+            else
+                return 'No tmp order to delete for date less than : ' . pretty_dates(Carbon::today());
+        }
     }
-}
+
+
+
+}//end of class

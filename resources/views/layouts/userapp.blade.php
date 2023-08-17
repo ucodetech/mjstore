@@ -30,6 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Oswald:wght@300;400&family=Passion+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('shopcss/shop.css') }}">
 </head>
 <style>
   *{
@@ -376,7 +377,7 @@
 <script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('assets_back/plugins/chart.js/Chart.min.js')}}"></script>
-
+<script src="{{ asset('shopjs/search.js')}}"></script>
 <script>
     //  var Toast = Swal.mixin({
     //     toast: true,

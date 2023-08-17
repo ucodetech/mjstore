@@ -13,6 +13,8 @@ class Brand extends Model
                             'slug',
                             'photo',
                             'status',
+                            'category_id',
+                            'vendor_id'
                         ];
 
 
@@ -25,4 +27,15 @@ class Brand extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    /**
+     * Get the category that owns the Brand
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class);
+    }
+ 
 }

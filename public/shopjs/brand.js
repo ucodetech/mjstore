@@ -15,7 +15,7 @@ $(function(){
     $('#brandTableID').DataTable({
         processing: true,
         info:true,
-        ajax:'super-brand-list',
+        ajax:'seller-brand-list',
         columns: [
             {data:'DT_RowIndex', name:'DT_RowIndex'},
             {data:'photoCus', name:'photoCus'},

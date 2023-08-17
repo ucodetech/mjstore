@@ -107,6 +107,7 @@ class SuperuserOrderController extends Controller
                             'subject' => 'Order Delete',
                             'body' => $message,
                             'actionLink' => $actionLink,
+                            'actionLinkText' => "",
                             'orderid' => $order_number,
                             'orderItems' => $orderItems,
                             'current_order' => $current_order

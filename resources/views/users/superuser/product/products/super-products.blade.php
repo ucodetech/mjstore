@@ -29,7 +29,7 @@
                         <table class="table table-bordered table-condensed table-hover" id="productsTable">
                             <thead>
                                 <th>#</th>
-                                <th>Unique Key</th>
+                                <th>Add Attr</th>
                                 <th>Photo</th>
                                 <th>Vendor</th>
                                 <th>Title</th>
@@ -56,7 +56,14 @@
                                 
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <th><span class="badge badge-pill badge-info">{{ $product->unique_key }}</span></th>
+                                    <th>
+                                        <a class="btn btn-default btn-sm mb-1" href="{{ route('superuser.super.add.product.attribute',$product->unique_key) }}">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        <a class="btn btn-info btn-sm" href="{{ route('superuser.super.product.information',$product->unique_key) }}" title="Add Additional Information">
+                                            <i class="fa fa-plus-circle"></i>
+                                        </a>
+                                    </th>
                                     <td>
                                         <img src="{{ asset('storage/uploads/products').'/'.$photo[0] }}" 
                                         alt="{{ $product->title }}" class="img-fluid product-image-thumb" width="50">
@@ -65,7 +72,7 @@
                                         @if ($product->vendor == '')
                                             <span class="badge badge-pill badge-danger">Home Shop</span>
                                         @else
-                                            <span class="badge badge-pill badge-info">{{ $product->vendor }}</span>
+                                        <span class="badge badge-pill badge-info">{{ $product->vendor->shop_name }}</span>
 
                                         @endif
                                     </td>

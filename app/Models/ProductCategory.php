@@ -17,7 +17,8 @@ class ProductCategory extends Model
                     'parent_id',
                     'is_parent',
                     'status',
-                    'is_top'
+                    'is_top',
+                    'vendor_id'
                 ];
 
     public static function shiftChild($child_cat_id){
@@ -42,6 +43,16 @@ class ProductCategory extends Model
 
     public static function catChild($id){
         return self::where('parent_id', $id)->get();
+    }
+
+    /**
+     * Get all of the brands for the ProductCategory
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function brands()
+    {
+        return $this->hasMany(Brand::class);
     }
 }
 

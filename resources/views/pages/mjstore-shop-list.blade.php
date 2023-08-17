@@ -6,7 +6,7 @@
 <section class="shop_grid_area section_padding_100">
     <div class="container">
         <div class="row">
-            @include('inc.product-sidebar')
+            @include('inc.pro-side')
 
             <div class="col-12 col-sm-7 col-md-8 col-lg-9">
                 <!-- Shop Top Sidebar -->

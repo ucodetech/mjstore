@@ -9,14 +9,14 @@
              
                 <!-- Shop Top Sidebar -->
                 <div class="shop_top_sidebar_area d-flex flex-wrap align-items-center justify-content-between">
-                    <div class="view_area d-flex">
+                    {{-- <div class="view_area d-flex">
                         <div class="grid_view">
                             <a href="" data-toggle="tooltip" data-placement="top" title="Grid View"><i class="icofont-layout"></i></a>
                         </div>
                         <div class="list_view ml-3">
                             <a href="{{ route('shop.list') }}" data-toggle="tooltip" data-placement="top" title="List View"><i class="icofont-listine-dots"></i></a>
                         </div>
-                    </div>
+                    </div> --}}
                     @php
                             $sorts = [
                                'default'=>'Default',

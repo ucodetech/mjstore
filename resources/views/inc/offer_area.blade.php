@@ -33,7 +33,7 @@
                         <div class="weekly_deals_info">
                             <h4>Deals of the Week</h4>
                             <div class="deals_timer">
-                                <ul data-countdown="2021/02/14 14:21:38">
+                                <ul data-countdown="2023/10/1 14:21:38">
                                     <!-- Please use event time this format: YYYY/MM/DD hh:mm:ss -->
                                     <li><span class="days">00</span>days</li>
                                     <li><span class="hours">00</span>hours</li>

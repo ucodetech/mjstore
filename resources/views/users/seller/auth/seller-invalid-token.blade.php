@@ -9,7 +9,7 @@
           <a href="" class="h1"><b>MJStore</b> Admin Panel</a>
         </div>
         <div class="card-body">
-          <p class="login-box-msg">Invalid Token Please enter your register email to get a fresh token! registered email is {{ $email }}</p>
+          <p class="login-box-msg">Invalid Token Please enter your registered email to get a fresh token! </p>
           @include('inc.messages')
           <form action="" method="post">
             <div class="input-group mb-3">

@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Models\OrderItems;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 
 
@@ -82,6 +83,11 @@ class CheckoutController extends Controller
 
     
     public function CheckoutProcess(Request $request){
+        $tmp_order_delete = TemporaryCheckoutProcess::where('user_id', auth()->user()->id)
+        ->where('created_at', '<', Carbon::today() )->first();
+            if($tmp_order_delete){
+            $tmp_order_delete->delete();
+         }
         $countries = Country::orderBy('country', 'asc')->get();
         $states = State::all();
         $shippings = Shipping::where('status', 'active')->orderBy('id', 'desc')->get();
@@ -337,6 +343,7 @@ class CheckoutController extends Controller
             return redirect()->back()->withErrors('Please select payment method before proceeding to next step')->withInput();
         }
 
+       
         $tmp_order = TemporaryCheckoutProcess::where('user_id', auth()->user()->id)->first();
         $orderNo = 'MJORD-'.Str::random(10);
         $create = Order::create([
@@ -372,10 +379,27 @@ class CheckoutController extends Controller
                         'u_order_id' => $orderid->order_number, 
                         'product_name' => $item->model->title
                     ]);
+                   
                     $newstock = Product::where('id', $item->model->id)->first()->stock - $item->qty;
                     Product::where('id', $item->model->id)->update([
                                 'stock' =>  $newstock
                     ]);
+                    $attribute = ProductAttribute::where('product_id', $item->model->id)->first();
+                    $color = ($item->options->has('color') ? $item->options->color : "");
+                    if($color != ""){
+                        OrderItems::where('u_order_id', $orderid->order_number)->update([
+                            'product_color' => $color
+                        ]);
+                    }
+                    if($attribute){
+                        $attrstock = $attribute->stock - $item->qty;
+                        ProductAttribute::where('product_id', $item->model->id)->update([
+                            'stock' =>  $attrstock
+                         ]);
+                         OrderItems::where('u_order_id', $orderid->order_number)->update([
+                            'product_size' => $attribute->size
+                        ]);
+                    }
                 }
                 $order_number = $orderid->order_number;
                 $message = 'Order Number: ' . $order_number;

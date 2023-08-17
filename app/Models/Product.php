@@ -60,7 +60,7 @@ class Product extends Model
      */
     public function vendor()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Seller::class);
     }
 
 
@@ -69,8 +69,6 @@ class Product extends Model
     }
 
   
-
-    
 
     /**
      * Get the orderitem that owns the Product

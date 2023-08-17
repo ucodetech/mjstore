@@ -3,7 +3,7 @@
 {{-- @include('inc.bread-user') --}}
 @php
     $cart = \Gloudemans\Shoppingcart\Facades\Cart::instance('shopping');
-    
+//     print_r($cart->content());
 @endphp
  <!-- Cart Area -->
   <div class="cart_area section_padding_100_70 pt-3 clearfix" id="cart_page_render">

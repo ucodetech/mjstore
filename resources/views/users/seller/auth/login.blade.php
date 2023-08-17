@@ -6,16 +6,16 @@
       <!-- /.login-logo -->
       <div class="card card-outline card-primary">
         <div class="card-header text-center">
-          <a href="" class="h1"><b>MJStore</b> Admin Panel</a>
+          <a href="" class="h1"><b>MJStore</b> Vendor Panel</a>
         </div>
         <div class="card-body">
           <p class="login-box-msg">Sign in to start your session</p>
           @include('inc.messages')
-          <form action="{{ route('superuser.super.process.login') }}" method="post">
+          <form action="{{ route('seller.vendor.process.login') }}" method="post">
             @csrf
             @method('POST')
             <div class="input-group mb-3">
-              <input type="text" name="username" value="{{ old('username') }}" class="form-control" placeholder="Username">
+              <input type="text" name="manager_email" value="{{ old('manager_email') }}" class="form-control" placeholder="Email">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
@@ -48,8 +48,9 @@
           </form>
     
     
-          <p class="mb-1">
-            <a href="forgot-password.html">I forgot my password</a>
+          <p class="d-flex justify-content-between mb-1 mt-3">
+            <a href="#">I forgot my password</a>
+            <a href="{{ route('seller.vendor.register') }}">Don't have account? Register</a>
           </p>
           
         </div>

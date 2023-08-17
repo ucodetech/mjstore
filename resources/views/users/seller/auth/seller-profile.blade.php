@@ -1,4 +1,4 @@
-@extends('layouts.superuserapp')
+@extends('layouts.sellerapp')
 @section('content')
     <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -19,11 +19,11 @@
                     <div id="profilePhoto">
                         <label for="profile_photo" style="cursor:pointer" title="Click to select file">
                         <img class="profile-user-img img-fluid img-circle"
-                         src="{{ asset('profilePhotos/superProfile').'/'.$super->super_profile_photo }}"
-                         alt="{{ $super->super_fullname }}">
+                         src="{{ asset('profilePhotos/sellerProfile').'/'.$seller->manager_profile_photo }}"
+                         alt="{{ $seller->manager_fullname }}">
                         </label>
                     </div>
-                    <form action="{{ route('superuser.super.update.profile.photo') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('seller.vendor.update.profile.photo') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('POST')
                         <input type="file" name="profile_photo" id="profile_photo" class="d-none">
@@ -32,21 +32,20 @@
 
                   </div>
   
-                  <h3 class="profile-username text-center">{{ $super->super_fullname }}</h3>
+                  <h3 class="profile-username text-center">{{ $seller->manager_fullname }}</h3>
   
-                  <p class="text-muted text-center">{{ $super->portfolio }}</p>
-                  <p class="text-muted text-center">{{ $super->super_email }}</p>
+                  <p class="text-muted text-center">{{ $seller->manager_email }}</p>
 
   
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                      <b>Tel</b> <a class="float-right">{{ $super->super_phone_no }}</a>
+                      <b>Tel</b> <a class="float-right">{{ $seller->manager_tel }}</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Role</b> <a class="badge badge-btn badge-info  float-right">{{ $super->role }}</a>
+                      <b>Role</b> <a class="badge badge-btn badge-info  float-right">{{ $seller->role }}</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Status</b> <a class="badge badge-btn badge-success float-right">{{ $super->status }}</a>
+                      <b>Status</b> <a class="badge badge-btn badge-success float-right">{{ $seller->status }}</a>
                     </li>
                   </ul>
   
@@ -319,34 +318,27 @@
                     <!-- /.tab-pane -->
   
                     <div class="tab-pane" id="settings">
-                      <form class="form-horizontal" action="{{ route('superuser.super.update.details') }}" method="POST">
+                      <form class="form-horizontal" action="{{ route('seller.vendor.update.details') }}" method="POST">
                         @csrf
                         @method('POST')
                         <div class="form-group row">
                           <label for="fullname" class="col-sm-2 col-form-label">Name</label>
                           <div class="col-sm-10">
-                            <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Name" value="{{ $super->super_fullname }}">
+                            <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Name" value="{{ $seller->manager_fullname }}">
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label for="super_email" class="col-sm-2 col-form-label">Email</label>
+                          <label for="manager_email" class="col-sm-2 col-form-label">Email</label>
                           <div class="col-sm-10">
-                            <input type="email" class="form-control" name="super_email" id="super_email" value="{{ $super->super_email }}" placeholder="Email">
+                            <input type="email" class="form-control" name="manager_email" id="manager_email" value="{{ $seller->manager_email }}" placeholder="Email">
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label for="super_phone_no" class="col-sm-2 col-form-label">Tel</label>
+                          <label for="manager_tel" class="col-sm-2 col-form-label">Tel</label>
                           <div class="col-sm-10">
-                            <input type="tel" class="form-control" name="super_phone_no" id="super_phone_no" value="{{ $super->super_phone_no }}" placeholder="Phone no">
+                            <input type="tel" class="form-control" name="manager_tel" id="manager_tel" value="{{ $seller->manager_tel }}" placeholder="Phone no">
                           </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="portfolio" class="col-sm-2 col-form-label">Portfolio</label>
-                            <div class="col-sm-10">
-                              <input type="text" class="form-control" name="portfolio" id="portfolio" value="{{ $super->portfolio }}" placeholder="portfolio">
-                            </div>
-                          </div>
-                          
                          
                         <div class="form-group row">
                           <div class="offset-sm-2 col-sm-10">
@@ -366,7 +358,7 @@
                       </form>
                       <hr>
                       <h3 class="text-center">Update Password</h3>
-                      <form class="form-horizontal" action="{{ route('superuser.super.update.password') }}" method="POST">
+                      <form class="form-horizontal" action="{{ route('seller.vendor.update.password') }}" method="POST">
                         @csrf
                         @method('POST')
                         <div class="form-group row">

@@ -8,11 +8,12 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/app.js',
             ],
-            refresh: [
-                'resources/routes/**',
-                'routes/**',
-                'resources/views/**',
-            ],
+            refresh: true
+            // [
+            //     'resources/routes/**',
+            //     'routes/**',
+            //     'resources/views/**',
+            // ],
         }),
     ],
 });

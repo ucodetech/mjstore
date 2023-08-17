@@ -9,8 +9,39 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+
+        @if (seller()->can_sell_now == 0)
+              <div class="card card-outline card-danger text-center">
+                <div class="card-body">
+                  @if ($bizinfo)
+                    <p class="lead text-center text-info">
+                      <i class="fa fa-info-circle fa-1x"></i> Your application have been submitted successfully and is under review! please  check your mail box within 2 - 3 working days for approval email
+                    </p>
+                  @else
+                  <p class="lead text-center text-info">
+                    <i class="fa fa-info-circle fa-1x"></i> Thank you for registering with MJStore, we have recevied your registration! Before your store will be visible to the public you have to complete a form! click on the button below to complete the form!
+                  </p>
+                  <hr>
+                  <a href="{{ route('seller.vendor.biz.info') }}" class="btn bg-gradient-info">Complete Form</a>
+                  @endif
+                 
+                </div>
+              </div>
+            @else
           <!-- Info boxes -->
+         <div class="w-50">
+          @if (pretty_dates(carbonNow()) == pretty_dates(sellerBizInfo()->Date_Approved))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
+          
+            <strong>Approved!</strong> Your store have been approved
+          </div>
+         @endif
+         
+         </div>
           <div class="row">
+           
+          
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
@@ -836,7 +867,7 @@
             <!-- /.col -->
           </div>
           <!-- /.row -->
-        
+          @endif
       </div><!--/. container-fluid -->
     </section>
     <!-- /.content -->

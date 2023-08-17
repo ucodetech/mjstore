@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItems extends Model
 {
     use HasFactory;
-    protected $fillable = ['product_id', 'order_id','product_qty','u_order_id', 'product_name'];
+    protected $fillable = ['product_id', 'order_id','product_qty','u_order_id', 'product_name','product_color', 'product_size'];
 
     /**
      * Get the order that owns the OrderItems

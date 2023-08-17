@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{ (getSettings() !=null) ? getSettings()->meta_description : "#" }}">
+    <meta name="keywords" content="{{ (getSettings() !=null) ? getSettings()->meta_keywords : "#" }}">
+    <meta name="author" content="Ejekwu Graveth Uzoma">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,7 +20,8 @@
     
 
     <!-- Favicon  -->
-    <link rel="icon" href="{{ asset('assets_front/img/core-img/favicon.ico')}}">
+   <!-- Favicon  -->
+   <link rel="icon" href="{{ (getSettings() != null ? asset('storage/uploads/settings/'.getSettings()->favicon) : asset('assets_front/img/core-img/favicon.ico')) }}">
 
 
 
@@ -46,6 +50,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Oswald:wght@300;400&family=Passion+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('shopcss/shop.css') }}">
     @vite('resources/js/app.js')
 
   <style>
@@ -107,7 +112,7 @@
                 <nav class="classy-navbar" id="bigshopNav">
 
                     <!-- Nav Brand -->
-                    <a href="{{ route('home') }}" class="nav-brand"><img src="{{ asset('assets_front/img/core-img/logo.png')}}" alt="logo"></a>
+                    <a href="{{ route('home') }}" class="nav-brand"><img src="{{  getSettings() != null ? asset('storage/uploads/settings/'. getSettings()->site_logo): asset('assets_front/img/core-img/logo.png')  }}" alt="logo"></a>
 
                     <!-- Toggler -->
                     <div class="classy-navbar-toggler">
@@ -200,18 +205,25 @@
                         <h6>Contact Us</h6>
                     </div>
                     <ul class="footer_content">
-                        <li><span>Address:</span> Lords, London, UK - 1259</li>
-                        <li><span>Phone:</span> 002 63695 24624</li>
-                        <li><span>FAX:</span> 002 78965 369552</li>
-                        <li><span>Email:</span> support@example.com</li>
+                        <li><span>Address:</span> {{ (getSettings() !=null) ? getSettings()->address : "#" }}</li>
+                        <li><span>Phone:</span> 
+                            <a href="tel: {{ (getSettings() !=null) ? getSettings()->phone : "#" }}">
+                                 {{ (getSettings() !=null) ? getSettings()->phone : "#" }}
+                            </a>
+                        </li>
+                        <li><span>Email:</span> 
+                            <a href="mailto:{{ (getSettings() !=null) ? getSettings()->email : "#" }}">
+                                {{ (getSettings() !=null) ? getSettings()->email : "#" }}
+                            </a>
+                        </li>
                     </ul>
                     <div class="footer_social_area mt-15">
-                        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->facebook_url : "#" }}"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->twitter_url : "#" }}"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->linkedin_url : "#" }}"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->whatsapp_url : "#" }}"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->instagram_url : "#" }}"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="{{ (getSettings() !=null) ? getSettings()->youtube_url : "#" }}"><i class="fab fa-youtube" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -301,8 +313,7 @@
                 <!-- Copywrite -->
                 <div class="col-12 col-md-6">
                     <div class="copywrite_text">
-                        <p>Made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="#">Designing
-                                World</a></p>
+                        <p>Made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="#">{{ (getSettings() !=null) ? getSettings()->made_with : "Designing word" }}</a></p>
                     </div>
                 </div>
                 <!-- Payment Method -->

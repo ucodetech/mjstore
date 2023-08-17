@@ -30,7 +30,7 @@ $(function(){
                         $('#add_to_cart'+product_id).html('Add to Cart');
                     },
                     success:function(data){
-                        if(data.status=true){
+                        if(data.status==true){
                             Swal.fire(
                                 'Success',
                                 data.message,

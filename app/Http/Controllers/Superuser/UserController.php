@@ -57,7 +57,7 @@ class UserController extends Controller
                         })
                        
                         ->addColumn('photoCus', function($row){
-                            return '<img class="img-fluid img-circle" src="'.asset('profilePhotos/userProfile').'/'.$row->photo.'">';
+                            return '<img class="img-fluid img-circle" src="'.asset('profilePhotos/userProfile/'.$row->photo ).'" width="50" height="50">';
                         })
                         ->addColumn('unique_id', function($row){
                             return '<span class="badge badge-pill badge-primary">'.$row->unique_id.'</span>';

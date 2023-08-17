@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'is_superuser' => \App\Http\Middleware\IsSuperuser::class,
         'is_user_email_verified' => \App\Http\Middleware\isUserEmailVerified::class,
         'is_super_email_verified' => \App\Http\Middleware\isSuperEmailVerified::class,
+        'is_seller_email_verified' => \App\Http\Middleware\IsSellerEmailVerified::class,
         'is_user_seller' => \App\Http\Middleware\whoIsUser::class,
         'is_logged_in' => \App\Http\Middleware\IsUserloggedIn::class,
         'is_cart_empty' => \App\Http\Middleware\IsCartEmpty::class,

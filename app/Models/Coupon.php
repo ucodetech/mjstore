@@ -13,7 +13,8 @@ class Coupon extends Model
                     'coupon_code',
                     'type',
                     'status',
-                    'value'
+                    'value',
+                    'vendor_id'
     ];
 
 

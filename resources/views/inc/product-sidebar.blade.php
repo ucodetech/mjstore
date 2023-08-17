@@ -30,7 +30,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="slider-range">
-                                    <div data-min="0" data-max="500000" data-unit="₦" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="0" data-value-max="500000" data-label-result="Price:">
+                                    <div data-min="0" data-max="500000" data-unit="{{ ((session()->has('default_currency'))? currency_symbol() : "₦" ) }}" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="0" data-value-max="500000" data-label-result="Price:">
                                         <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                                         <span class="ui-slider-handle ui-state-default ui-corner-all bg-primary rounded-circle" tabindex="0"></span>
                                         <span class="ui-slider-handle ui-state-default ui-corner-all bg-primary rounded-circle" tabindex="0"></span>
@@ -42,11 +42,18 @@
                                 <button type="button" class="btn btn-sm btn-info btn-block">Apply</button>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="">test</label>
+                            <input type="text" name="" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                            <small id="helpId" class="text-muted">Help text</small>
+                          </div>
                         <hr>
                          <!-- Single Widget -->
                          <div class="card bg-white border-0">
                            {{-- form --}}
-                           <form action="" method="post">
+                            {{-- <form action="{{ route("category.product", $categories->slug) }}" method="POST">
+                                @csrf
+                                @method("POST") --}}
                                 <div class="card-header text-uppercase bg-white border-0">
                                     <a class="text-left">Color</a>
                                 </div>
@@ -57,16 +64,18 @@
                                 @foreach ($colors as $color)
                                 
                                     <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                        <input type="checkbox" name="product_color[]" class="custom-control-input color_product" id="product_color{{ $color->id }}" value="{{ $color->color }}">
+                                        <input type="checkbox" name="product_color[]" class="custom-control-input color_product" id="product_color{{ $color->id }}" value="{{ $color->color }}" {{ ((!empty($_GET['color']) && $_GET['color'] == $color->color)? " checked" : "") }}
+                                        >
                                         <label class="custom-control-label {{ strtolower($color->color) }}" for="product_color{{ $color->id }}">{{ $color->color }} 
-                                        {{-- add count later --}}
+                                        
                                     </div>
                                 @endforeach
                             @else
                                 <h4 class="text-muted text-center">No Color</h4>
                             @endif
                                 </div>
-                           </form>
+                            {{-- </form> --}}
+                             
                             {{-- end of form --}}
                         </div>
                         <hr>

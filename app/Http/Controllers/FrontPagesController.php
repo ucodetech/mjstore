@@ -10,12 +10,20 @@ use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Size;
 use Laravel\Ui\Presets\React;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\Models\ProductInformation;
+use App\Models\ProductAttribute;
+use App\Models\ProductReview;
+
+
+
 
 class FrontPagesController extends Controller
 {
     public function Index(){
         $banners = Banner::where('status', 'active')->where('condition', 'banner')->orderBy('id', 'desc')->limit(5)->get();
-        $categories = ProductCategory::where('status', 'active')->where('is_parent', 1)->orderBy('id', 'desc')->get();
+        $categories = ProductCategory::where('status', 'active')->where('is_parent', 1)->orderBy('title', 'asc')->get();
         $products_new = Product::where('status', 'active')->where('condition', 'new')->orderBy('created_at', 'desc')->get();
         $products_featured = Product::where('status', 'active')->where('featured', 1)->orderBy('created_at', 'desc')->get();
         $brands = Brand::where('status', 'active')->get();
@@ -40,14 +48,37 @@ class FrontPagesController extends Controller
 
         $sort = '';
         $cols = '';
+        $route = 'category';
+
         if($request->all() != null){
             $sort = $request->s;
-            $cols = $request->color;
+            $getcolors = $request->color;
+            $price_range = $request->price_range;
+            $getbrands = $request->brand;
+            $getsize = $request->size;
+            
         }
+        $price_range = $request->price_range;
+        if(isset($_GET[$price_range])){
+            $price_range = $_GET[$price_range];
+        }
+        $getcolors = $request->color;
+        if(!empty($_GET[$getcolors])){
+            $getcolors = $_GET[$getcolors];
+        }
+        $getbrands = $request->brand;
+        if(!empty($_GET[$getbrands])){
+            $getbrands = $_GET[$getbrands];
+        }
+        $getsize = $request->size != null ? $request->size : "";
 
+
+        
          if($categories->slug == ''){
             return view('errors.404');
          }else{
+
+           
             if ($sort=='priceAsc') {
                 $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
                                         ->orderBy('sales_price', 'asc')
@@ -72,54 +103,42 @@ class FrontPagesController extends Controller
                 $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
                                         ->orderBy('product_discount', 'desc')
                                         ->paginate(20);
-            } else if($cols){
-                // $color = explode(',',$cols);
-                $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->where('color', 'LIKE', '%'.$cols.'%')
+            }
+            else if($getcolors){
+                $cols = explode(',',$getcolors);
+                foreach($cols as $col){
+                    $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->where('color', 'LIKE', '%'.$col.'%')
+                    ->paginate(20);
+                }
+                
+            } else if($getsize){
+                 $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->where('size', 'LIKE', '%'.$getsize.'%')
+                    ->paginate(20);
+                
+            }
+            else if($getbrands){
+                $bs = explode(',', $getbrands);
+                $brs_ids = Brand::select('id')->whereIn('slug', $bs)->pluck('id')->toArray();
+                $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->whereIn('brand_id',$brs_ids)
                 ->paginate(20);
-            }else{
+                
+                
+            }
+            else if($price_range){
+                $price = explode('-', $price_range);
+                $pricemin = floor($price[0]);
+                $pricemax = floor($price[1]);
+                $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->whereBetween('sales_price', [$pricemin, $pricemax])
+                ->paginate(20);
+            }
+            
+            else{
                 $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->orWhere(['child_cat_id'=>$categories->id])
                 ->orderBy('id', 'desc')
                 ->paginate(12);
             }
             
-            // switch ($sort) {
-            //     case 'priceAsc':
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
-            //                             ->orderBy('sales_price', 'asc')
-            //                             ->paginate(20);
-            //         break;
-            //     case 'priceDsc':
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
-            //                             ->orderBy('sales_price', 'desc')
-            //                             ->paginate(20);
-            //         break;
-            //     case 'titleAsc':
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
-            //                             ->orderBy('title', 'asc')
-            //                             ->paginate(20);
-            //         break;
-            //     case 'titleDsc':
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
-            //                             ->orderBy('title', 'desc')
-            //                             ->paginate(20);
-            //         break;
-            //     case 'discountAsc':
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
-            //                             ->orderBy('product_discount', 'asc')
-            //                             ->paginate(20);
-            //         break;
-            //     case 'discountDsc':
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])
-            //                             ->orderBy('product_discount', 'desc')
-            //                             ->paginate(20);
-            //         break;
-               
-            //     default:
-            //         $products = Product::where(['status'=>'active', 'cat_id'=>$categories->id])->orWhere(['child_cat_id'=>$categories->id])
-            //         ->orderBy('id', 'desc')
-            //         ->paginate(12);
-            //         break;
-            // }
+           
          }
         $cat_child = ProductCategory::catChild($p_id);
         if($categories->is_parent != 1){
@@ -127,7 +146,6 @@ class FrontPagesController extends Controller
         }else{
             $cat_child_parent = '';
         }
-        $route = 'category';
         return view('pages.category.mjstore-category', 
         [
             'categories'=>$categories,
@@ -143,6 +161,130 @@ class FrontPagesController extends Controller
        
        
     }
+//multi filter
+    public function multiFilter(Request $request){
+        //code
+       
+        $validator = Validator::make($request->all(), [
+                    'm_brand' => 'required',
+                    'm_color' => 'required',
+                    'm_size' => 'required',  
+        ],[
+            'm_brand.required'=> "Brand is required!",
+            'm_color.required'=> "Color is required!",
+            'm_size.required'=> "Size is required!"
+        ]);
+        if(!$validator->passes()){
+            return  response()->json(['code'=>0, 'error'=>$validator->errors()->toArray()]);
+        }else{
+            $cat_id = $request->cat_id;
+            $brand = $request->m_brand;
+            $color = $request->m_color;
+            $size = $request->m_size;
+
+            $products = Product::where('cat_id', $cat_id)
+                                ->where('brand_id',$brand)
+                                ->Where('color','LIKE', '%'.$color.'%')
+                                ->Where('size', 'LIKE', '%'.$size.'%')
+                                ->paginate(20);
+             
+          }
+         
+
+        $output = '';
+      
+          // product
+          if(count($products)>0){
+         
+          $output.=' <div class="row">';
+                foreach($products as $product){
+                    $photo = explode(',',$product->photo);
+                    $price = ($product->product_discount == 0.00) ? " ": currency_converter($product->price);
+
+         $output.='<div class="col-md-3 col-sm-6 pb-3">
+                    <div class="product-grid">
+                        <div class="product-image">
+                            <a href="'.route('product.details', $product->slug) .'" title="'.$product->title .'">';
+                            if (count($photo)>1)
+                            $output.='  <img decoding="async" class="pic-1" src="'.asset('storage/uploads/products/'.$photo[0] ) .'">
+                                <img decoding="async" class="pic-2" src="'.asset('storage/uploads/products/'.$photo[1] ).'">';
+                            else
+                            $output.=' <img decoding="async" class="pic-1" src="'.asset('storage/uploads/products/'.$photo[0] ) .'">';
+                                                        
+                     $output.='</a>';
+                     $output.=' <ul class="social">
+                                <li><a 
+                                    style="cursor:pointer"
+                                    data-tip="Quick View"
+                                    id="quickViewProduct" 
+                                    data-url="'. route('product.quickview.detail') .'" 
+                                    data-id="'. $product->unique_key .'"
+                                    ><i class="fa fa-search"></i></a>
+                                </li>
+                                
+                                <li>
+                                <a
+                                style="cursor:pointer"  
+                                data-tip="Add to Wishlist"
+                                href="javascript:void(0)"
+                                class="add_to_wishlist"
+                                data-product-id="'.$product->id .'"
+                                data-url='.route('wishlist.store') .'
+                                id="add_to_wishlist-'.$product->id .'" 
+                                ><i class="fa fa-shopping-bag"></i></a>
+                                </li>
+                                
+                                
+                            </ul>
+                                <span class="product-new-label bg-primary">'.$product->condition.'</span>
+                             <span class="product-discount-label" style="background:orangered">'.N2P($product->product_discount).'</span>
+                        </div>
+                                <ul class="rating">
+                                    <li class="fa fa-star"></li>
+                                    <li class="fa fa-star"></li>
+                                    <li class="fa fa-star"></li>
+                                    <li class="fa fa-star"></li>
+                                    <li class="fa fa-star disable"></li>
+                                </ul>
+                                <div class="product-content">
+                                    <h3 class="title">
+                                        <a href="'.$product->slug.'">
+                                           '.$product->title.'
+                                        </a>
+                                        <p class="m-0 p-0"><span class="text-sm text-muted">'.$product->brand->title.'</span></p>
+                                    </h3>
+                                    <div class="price text-success">
+                                    '.currency_converter($product->sales_price).'
+                                    <span class="text-danger text-strike"> 
+                                    '.$price.'
+                                    </span>
+                                    </div>
+                                    <a style="cursor:pointer"
+                                    data-quantity="1"
+                                    data-product-id="'. $product->id .'"
+                                    class="btn btn-info text-light  add_to_cart"
+                                    id="add_to_cart'. $product->id .'"
+                                    data-stock="'. $product->stock .'"
+                                    data-url-cart="'.route('cart.store') .'"
+                                    ><i class="fa fa-shopping-cart"></i> Add To Cart</a>
+                                </div>
+                            </div>
+                    </div>';
+                    
+               
+                }
+                
+      $output.='</div>';
+      
+         } else {
+            
+          $output.='<h4 class="text-muted">No product found</h4>';
+          
+         }
+                    
+         return ['code'=>1, 'data'=> $output];
+    }
+    
     public function ShopList(){
         $products = Product::where('status', 'active')->orderBy('id', 'desc')->paginate(20);
         $categories = ProductCategory::with('products')->where('status', 'active')->where('is_parent', 1)->orderBy('title', 'asc')->get();
@@ -164,6 +306,8 @@ class FrontPagesController extends Controller
     public function productDetails($slug_url){
        
         $product = Product::where('slug', $slug_url)->first();
+        $count_review = ProductReview::where('status', 'accept')->count();
+
         if($product){
             $likeproducts = Product::where('status', 'active')
                                     ->where('slug', '!=', $slug_url)
@@ -171,11 +315,15 @@ class FrontPagesController extends Controller
                                     ->orderBy('id', 'desc')
                                     ->limit(5)
                                     ->get();
-        
+            $pinfo = ProductInformation::where('product_id', $product->id)->first();
+            $productAttr = ProductAttribute::where('product_id', $product->id)->get();
                 return view('pages.mjstore-product-details', 
                 [
                     'product'=>$product,
-                    'likeproducts'=>$likeproducts
+                    'likeproducts'=>$likeproducts,
+                    'pinfo'=>$pinfo,
+                    'productAttr'=>$productAttr,
+                    'count_review' => $count_review
                 ]);
         }
          return redirect()->route('404')->withInput();
@@ -283,7 +431,7 @@ class FrontPagesController extends Controller
             ';
         return $output;
     }
-
+    //not using this
     public function categoryProducts(Request $request,$slug_url){
         $categories = ProductCategory::with('products')->where('slug', $slug_url)->where('status', 'active')->first();
         dd($categories->id);
@@ -351,6 +499,158 @@ class FrontPagesController extends Controller
     }
 
 
+    //fetch brands
+    public function fetchBrand(Request $req){
+        $brands = Brand::with('product')->where('status', 'active')->OrderBy('title', 'asc')->get(); 
+        $output = "";
+            $brnds = $req->brands;
+            if($brnds){
+                $filteredbrand = explode(',',$brnds);
+            }else{
+                $filteredbrand = [];
+            }
+             
+
+            if(count($brands)>0){
+                foreach($brands as $key=>$brand){
+                
+                        if(count($brand->product)==0){
+                            $text = 'text-danger';
+                        }elseif(count($brand->product) < 5){
+                            $text = 'text-warning';
+                        }else{
+                            $text = 'text-success';
+                        }
+                        
+                
+                $output.='<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                        <input type="checkbox" class="custom-control-input product_brand" id="product_brand'.$brand->id.'" name="product_brand[]" data-id="'.$brand->id.'" value="'.$brand->slug.'"  '.(in_array($brand->slug, $filteredbrand) ? " checked": "").'>
+                        <label class="custom-control-label" for="product_brand'.$brand->id.'">'.$brand->title.' <span class="'.$text.'">('.count($brand->product) .')</span></label>
+                    </div>';
+                }
+               
+        }else{
+            $output.='<h5 class="text-center text-muted">No brand found</h5>';
+        }
+        return $output;
+        
+    }
+    //search brand
+    public function searchBrand(Request $req){
+        $search = $req->brand;
+        $brands = Brand::with('product')->where('status', 'active')
+                        ->where('title', 'LIKE', '%'.$search.'%')->get(); 
+        $output = "";
+        $brnds = $req->brands;
+        $filteredbrand = explode(',',$brnds);
+
+            if(count($brands)>0){
+                foreach($brands as $key=>$brand){
+                
+                        if(count($brand->product)==0){
+                            $text = 'text-danger';
+                        }elseif(count($brand->product) < 5){
+                            $text = 'text-warning';
+                        }else{
+                            $text = 'text-success';
+                        }
+                        
+                
+                        $output.='<div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                        <input type="checkbox" class="custom-control-input product_brand" id="product_brand'.$brand->id.'" name="product_brand[]" data-id="'.$brand->id.'" value="'.$brand->slug.'"  '.(in_array($brand->slug, $filteredbrand) ? " checked": "").'>
+                        <label class="custom-control-label" for="product_brand'.$brand->id.'">'.$brand->title.' <span class="'.$text.'">('.count($brand->product) .')</span></label>
+                    </div>';
+                }
+            
+        }else{
+            $output.='<h6 class="text-center text-muted">No brand found</h6>';
+        }
+        return $output;
+        
+    }
+
+    public function autoSearch(Request $request){
+        $search_term = $request->search_term;
+        $titles = PRODUCT::select(['title', 'slug','photo'])->where('title', 'LIKE', '%'.$search_term.'%')->where('status', 'active')->get();
+        $data= "";
+        if(count($titles)>0){
+            foreach($titles as $title){
+                $photo = explode(',',$title->photo);
+                $data .='<a href="'.route('product.details', $title->slug).'" class="text-dark mb-3">
+                <img src="'.asset('storage/uploads/products/'.$photo[0] ).'" class="img-fluid img-thumbnail" width="50">
+                <i class="fa fa-check fa-sm text-muted"></i>&nbsp;<span>'.$title->title.'</span>
+                </a>';
+            }
+        }else{
+            $data .='<a  class="text-muted  text-center mb-3"><span>No record found!</span></a>';
+        }
+        return $data;
+    }
+
+    public function formattedCurrency(Request $req){
+        return currency_converter($req->attr_price);
+    }
+
+
+// product review
+public function submitReview(Request $request){
+    $validator = Validator::make($request->all(), [
+                'rate' => 'required',
+                'review_reason' => 'required'
+    ]);
+
+    if(!$validator->passes()){
+            return response()->json(['code'=>0, 'error'=> $validator->errors()->toArray()]);
+    }else{
+             $user = auth()->user()->id;
+            ProductReview::create([
+                'product_id' => $request->product_id,
+                'user_id' => $user,
+                'reason' => $request->review_reason,
+                'comment' => $request->comments,
+                'rate' => $request->rate,
+                'nickname' => $request->nickname,
+                'status'=> 'pending'
+            ]);
+            return response()->json(['code'=>1, 'msg'=> "Your review have been submitted and will be visible to the public once the admin approves it!"]);
+    }
+
+}
+
+public function fetchReview(Request $req){
+    //
+    if($req->data == "getReviews"){
+        $reviews = ProductReview::where(['product_id'=>$req->product_id,'status'=>'accept'])->orderBy('created_at', 'desc')->get();
+
+        $data = "";
+        if(count($reviews)> 0 ){
+            foreach($reviews as $review){
+                $data .= '
+                <div class="single_user_review mb-15" >
+                <div class="review-rating">';
+                for($i = 0; $i <= $review->rate; $i++){
+                    $data .= '<i class="fa fa-star" aria-hidden="true"></i>';
+                }
+                    $comments = ($review->comment != "") ? $review->comment : "";
+                   $data.='<span>'.$review->review_reason.'</span>
+                </div>
+                <div class="review-details">
+                    <p>by <a href="#">'.strtoupper($review->nickname).'</a> on <span>'.pretty_dates($review->created_at).'</span></p>
+                    <p>'.$comments.'</p>
+                </div>
+                </div>
+                
+                ';
+            }
+        }else{
+            $data .='<span class="text-center text-muted">No reviews yet</span>';
+        }
+
+        return $data;
+        
+    }
+
+}
 
 }//end of class
 

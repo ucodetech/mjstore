@@ -20,9 +20,10 @@ use App\Models\OrderItems;
 class CustomerController extends Controller
 {
    
-public function userForgotPassword(){
-    return view('users.user.auth.forgot-password');
-}
+    public function userForgotPassword(){
+        return view('users.user.auth.forgot-password');
+    }
+    
     public function userRegisterProcess(Request $request){
         $validator = Validator::make($request->all(), [
                 'fullname' => 'required|min:3',
@@ -73,7 +74,8 @@ public function userForgotPassword(){
                     'fromName' => $request->fullname,
                     'subject' => 'Email Verification',
                     'body' => $message,
-                    'actionLink' => $verifyUrl
+                    'actionLink' => $verifyUrl,
+                    'actionLinkText' => 'Verify Email'
                 
                 ];
 
@@ -183,7 +185,8 @@ public function userLoginProcess(Request $request){
                     'fromName' => $user->fullname,
                     'subject' => 'Email Verification',
                     'body' => $message,
-                    'actionLink' => $verifyUrl
+                    'actionLink' => $verifyUrl,
+                    'actionLinkText' => 'Verify Email'
                 
                 ];
 

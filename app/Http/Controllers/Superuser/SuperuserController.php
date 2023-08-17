@@ -36,7 +36,7 @@ class SuperuserController extends Controller
                 'portfolio' => 'required',
                 'is_superuser' => 'nullable'
         ]);
-http://127.0.0.1:8000/profilePhotos/superProfile/
+
         if(!$validator->passes()){
             return  redirect()->back()->withErrors($validator)->withInput();
         }else{
@@ -82,7 +82,8 @@ http://127.0.0.1:8000/profilePhotos/superProfile/
                     'fromName' => $request->fullname,
                     'subject' => 'Email Verification',
                     'body' => $message,
-                    'actionLink' => $verifyUrl
+                    'actionLink' => $verifyUrl,
+                    'actionLinkText' => 'Verify Email'
                 
                 ];
 
@@ -167,7 +168,8 @@ public function processLogin(Request $request){
                     'fromName' => $user->fullname,
                     'subject' => 'Email Verification',
                     'body' => $message,
-                    'actionLink' => $verifyUrl
+                    'actionLink' => $verifyUrl,
+                    'actionLinkText' => 'Verify Email'
                 
                 ];
 
@@ -248,7 +250,8 @@ public function updateSuperuser(Request $request){
             'fromName' => $request->fullname,
             'subject' => 'Email Verification',
             'body' => $message,
-            'actionLink' => $verifyUrl
+            'actionLink' => $verifyUrl,
+            'actionLinkText' => 'Verify Email'
         
         ];
 
@@ -272,8 +275,8 @@ public function updateSuperPassword(Request $request){
         'current_password' => 'required',
         'new_password' => 'required',
         'confirm_new_password' => 'required|same:new_password',
-       
-]);
+            
+        ]);
 
     if(!$validator->passes()){
             return  redirect()->back()->withErrors($validator)->withInput();

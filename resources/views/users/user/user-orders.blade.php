@@ -70,6 +70,33 @@
                                                         <span class="text-muted">
                                                             {{ Naira($product->sales_price) }}
                                                         </span>
+                                                        <div class="d-flex flex-grow-1 text-muted p-1">
+
+                                                            @php
+                                                                $color = $p_item->product_color != "" ? $p_item->product_color :"";
+                                                                $size = $p_item->product_size != "" ? $p_item->product_size : "";
+                                                            @endphp
+                                                            @if ($color != "")
+                                                                <span class="d-inline-flex text-sm">
+                                                                    <span class="colortext">Item Color:</span>
+                                                                    <span class="rounded-circle colorid shadow"
+                                                                        style="background-color:{{ $color }}; border:1px solid #ddd">
+                                                                    </span>
+                    
+                                                                </span>
+                                                            @endif
+                                                            @if ($size != "")
+                                                          
+                                                                <span class="d-inline-flex text-sm ml-2">
+                                                                    <span class="text-bold">Item Size:</span>
+                                                                    <span class="text-bold text-sm text-dark">
+                                                                        {{ $size }}
+                                                                    </span>
+                                                                </span>
+                                                            @endif
+                    
+                    
+                                                        </div>
                                                       
                                                     </div>
                                                     <span class="text-muted">{{ $p_item->product_qty }}x</span>
